@@ -1,11 +1,18 @@
 <template>
   <div>
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white bg-opacity-90 shadow-md transition-all duration-300" 
-            :class="{'bg-opacity-100': scrolled}">
+    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300" 
+            :class="{'bg-gradient-to-r from-indigo-600/90 to-purple-600/90': scrolled, 
+                    'bg-white/80': !scrolled}">
       <nav class="container mx-auto px-4 py-3">
         <div class="flex justify-between items-center">
-          <a href="#" class="text-2xl font-bold text-indigo-600">Nhà hàng Ngon</a>
+          <a href="#" class="text-2xl font-bold transition-all duration-300"
+             :class="{'text-white': scrolled, 'text-indigo-600': !scrolled}">
+            <span class="flex items-center gap-2">
+              <i class="fas fa-utensils animate-bounce"></i>
+              Nhà hàng Ngon
+            </span>
+          </a>
           <div class="hidden md:flex space-x-4">
             <a v-for="item in menuItems" 
                :key="item.href"
@@ -71,10 +78,14 @@
     </Transition>
 
     <!-- Hero Section -->
-    <section id="hero" class="hero-image h-screen flex items-center justify-center text-white relative">
-      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <section id="hero" class="hero-image h-screen flex items-center justify-center text-white relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+      <div id="tsparticles" class="absolute inset-0"></div>
       <div class="relative z-10 text-center">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4 animate__animated animate__fadeInDown">Nhà hàng Ngon</h1>
+        <h1 class="text-6xl md:text-7xl font-bold mb-4 animate__animated animate__fadeInDown 
+                   bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
+          Nhà hàng Ngon
+        </h1>
         <p class="text-xl md:text-2xl mb-8 animate__animated animate__fadeInUp animate__delay-1s">
           Hương vị truyền thống - Không gian hiện đại
         </p>
@@ -94,14 +105,19 @@
             <div v-for="dish in featuredDishes" 
                  :key="dish.id" 
                  class="swiper-slide">
-              <div class="bg-gray-100 rounded-lg overflow-hidden shadow-lg">
+              <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
                 <div class="relative overflow-hidden group">
                   <img :src="dish.image" 
                        :alt="dish.name" 
-                       class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
-                  <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                       class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent 
+                              opacity-0 group-hover:opacity-100 transition-all duration-300 
+                              flex items-center justify-center">
                     <button @click="openAddToCartModal(dish)" 
-                            class="bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-indigo-100 transition duration-300 transform hover:scale-105">
+                            class="bg-white/90 text-indigo-600 px-6 py-3 rounded-full 
+                                   hover:bg-indigo-600 hover:text-white transition duration-300 
+                                   transform hover:scale-105 flex items-center gap-2">
+                      <i class="fas fa-cart-plus"></i>
                       Thêm vào giỏ
                     </button>
                   </div>
@@ -297,14 +313,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, defineComponent } from 'vue'
 import Swiper from 'swiper'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import 'animate.css'
+import { tsParticles } from "tsparticles-engine"
 
 // State
 const scrolled = ref(false)
@@ -465,13 +483,14 @@ const sendContactForm = async (formData) => {
 }
 
 // Initialize AOS and Swiper on component mount
-onMounted(() => {
+onMounted(async () => {
   AOS.init({
     duration: 1000,
     once: true
   })
   
   new Swiper('.swiper-container', {
+    modules: [Navigation, Pagination, Autoplay],
     slidesPerView: 1,
     spaceBetween: 20,
     loop: true,
@@ -510,7 +529,47 @@ onMounted(() => {
       isMobileMenuOpen.value = false
     }
   })
+
+  // Initialize particles
+  await tsParticles.load("tsparticles", particlesOptions)
 })
+
+// Particles setup
+const particlesInit = async (engine) => {
+  const { loadFull } = await import("tsparticles")
+  await loadFull(engine)
+}
+
+const particlesLoaded = async (container) => {
+  console.log("Particles container loaded", container)
+}
+
+const particlesOptions = {
+  fullScreen: {
+    enable: false
+  },
+  particles: {
+    number: {
+      value: 80,
+      density: {
+        enable: true,
+        area: 800
+      }
+    },
+    color: {
+      value: "#ffffff"
+    },
+    links: {
+      enable: true,
+      color: "#ffffff",
+      distance: 150
+    },
+    move: {
+      enable: true,
+      speed: 2
+    }
+  }
+}
 </script>
 
 <style>
@@ -552,5 +611,48 @@ h1, h2, h3 {
   .hero-image {
     background-position: center 25%;
   }
+}
+
+/* Gradient Animations */
+.gradient-text {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5);
+  background-size: 200% auto;
+  animation: gradient 3s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4f46e5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4338ca;
 }
 </style>
