@@ -1,41 +1,61 @@
 <template>
   <div>
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-300" 
-            :class="{'bg-gradient-to-r from-indigo-600/90 to-purple-600/90': scrolled, 
-                    'bg-white/80': !scrolled}">
-      <nav class="container mx-auto px-4 py-3">
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+            :class="{'bg-gradient-to-r from-indigo-900/95 to-purple-900/95 shadow-lg': scrolled,
+                    'bg-transparent': !scrolled}">
+      <nav class="container mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
-          <a href="#" class="text-2xl font-bold transition-all duration-300"
-             :class="{'text-white': scrolled, 'text-indigo-600': !scrolled}">
-            <span class="flex items-center gap-2">
-              <i class="fas fa-utensils animate-bounce"></i>
+          <!-- Logo -->
+          <a href="#" class="flex items-center space-x-3 group">
+            <i class="fas fa-utensils text-2xl transition-all duration-300"
+               :class="{'text-white transform rotate-12': scrolled, 
+                       'text-white/90 group-hover:text-white': !scrolled}"></i>
+            <span class="text-2xl font-bold font-playfair tracking-wider transition-all duration-300"
+                  :class="{'text-white': scrolled,
+                          'text-white/90 group-hover:text-white': !scrolled}">
               Nhà hàng Ngon
             </span>
           </a>
-          <div class="hidden md:flex space-x-4">
-            <a v-for="item in menuItems" 
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a v-for="item in menuItems"
                :key="item.href"
-               :href="item.href" 
-               class="text-gray-700 hover:text-indigo-600 transition duration-300">
-              {{ item.text }}
+               :href="item.href"
+               class="relative overflow-hidden group py-2"
+               :class="{'text-white/80 hover:text-white': scrolled,
+                       'text-white/70 hover:text-white': !scrolled}">
+              <span class="relative z-10">{{ item.text }}</span>
+              <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
             </a>
           </div>
-          <div class="flex items-center">
-            <button @click="isCartOpen = !isCartOpen" 
-                    class="relative p-2 text-gray-700 hover:text-indigo-600 transition duration-300 cart-bubble">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+
+          <!-- Cart & Mobile Menu Buttons -->
+          <div class="flex items-center space-x-6">
+            <button @click="isCartOpen = !isCartOpen"
+                    class="relative group">
+              <svg class="w-6 h-6 transition-all duration-300"
+                   :class="{'text-white/80 group-hover:text-white': scrolled,
+                           'text-white/70 group-hover:text-white': !scrolled}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
-              <span v-if="cartItemCount > 0" 
-                    class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-indigo-600 rounded-full">
+              <span v-if="cartItemCount > 0"
+                    class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform scale-100 transition-transform duration-300">
                 {{ cartItemCount }}
               </span>
             </button>
-            <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="ml-4 md:hidden">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+
+            <button @click="isMobileMenuOpen = !isMobileMenuOpen"
+                    class="md:hidden group">
+              <svg class="w-6 h-6 transition-all duration-300"
+                   :class="{'text-white/80 group-hover:text-white': scrolled,
+                           'text-white/70 group-hover:text-white': !scrolled}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"/>
               </svg>
             </button>
           </div>
@@ -147,19 +167,61 @@
     <section id="menu" class="py-20 bg-gray-100">
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
+        <!-- Menu Categories -->
         <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
-          <div class="flex flex-nowrap overflow-x-auto pb-4 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
-            <button v-for="category in categories" 
-                    :key="category"
-                    @click="selectedCategory = category"
-                    :class="{
-                      'bg-indigo-600 text-white': selectedCategory === category,
-                      'bg-white text-indigo-600': selectedCategory !== category,
-                      'mr-2 mb-2 md:mr-4': true
-                    }"
-                    class="px-6 py-2 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 whitespace-nowrap">
-              {{ category }}
-            </button>
+          <div class="relative max-w-4xl mx-auto">
+            <!-- Background decoration -->
+            <div class="absolute inset-0 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-2xl transform -rotate-1"></div>
+            
+            <!-- Categories container -->
+            <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
+              <button v-for="category in categories" 
+                      :key="category"
+                      @click="selectedCategory = category"
+                      class="group relative px-8 py-3 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-105"
+                      :class="{
+                        'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg': selectedCategory === category,
+                        'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
+                      }">
+                <!-- Icon (you can add different icons for each category) -->
+                <span class="absolute left-3 top-1/2 -translate-y-1/2">
+                  <i :class="{
+                    'fas fa-utensils': category === 'Món chính',
+                    'fas fa-coffee': category === 'Đồ uống',
+                    'fas fa-leaf': category === 'Khai vị',
+                    'fas fa-ice-cream': category === 'Tráng miệng'
+                  }" class="text-sm"></i>
+                </span>
+                
+                <!-- Category name -->
+                <span class="font-medium">{{ category }}</span>
+                
+                <!-- Active indicator -->
+                <span v-if="selectedCategory === category" 
+                      class="absolute -bottom-1 left-1/2 w-12 h-1 bg-white rounded-full transform -translate-x-1/2
+                             shadow-lg animate-pulse"></span>
+              </button>
+            </div>
+            
+            <!-- Scroll indicators (only on mobile) -->
+            <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent md:hidden"></div>
+            <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent md:hidden"></div>
+          </div>
+          
+          <!-- Category description -->
+          <div class="text-center mt-6 text-gray-600 animate__animated animate__fadeIn">
+            <p v-if="selectedCategory === 'Món chính'">
+              Các món ăn chính đặc trưng của nhà hàng
+            </p>
+            <p v-else-if="selectedCategory === 'Khai vị'">
+              Khai vị đa dạng để mở đầu bữa ăn
+            </p>
+            <p v-else-if="selectedCategory === 'Tráng miệng'">
+              Tráng miệng ngọt ngào để kết thúc hoàn hảo
+            </p>
+            <p v-else-if="selectedCategory === 'Đồ uống'">
+              Đồ uống phong phú và độc đáo
+            </p>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -174,7 +236,7 @@
               <div class="flex justify-between items-center">
                 <span class="text-indigo-600 font-bold">{{ formatPrice(dish.price) }}</span>
                 <button @click="openAddToCartModal(dish)" 
-                        class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition duration-300">
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300">
                   Thêm vào giỏ
                 </button>
               </div>
@@ -239,22 +301,27 @@
               Giỏ hàng trống
             </div>
             <div v-else class="space-y-4">
-              <div v-for="item in cart" :key="item.id" class="flex items-center space-x-4">
-                <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded">
-                <div class="flex-1">
-                  <h4 class="font-bold">{{ item.name }}</h4>
-                  <div class="flex items-center space-x-2">
-                    <button @click="decreaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">-</button>
-                    <span>{{ item.quantity }}</span>
-                    <button @click="increaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">+</button>
+              <div v-for="item in cart" :key="item.id" class="flex flex-col space-y-2">
+                <div class="flex items-center space-x-4">
+                  <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded">
+                  <div class="flex-1">
+                    <h4 class="font-bold">{{ item.name }}</h4>
+                    <div class="flex items-center space-x-2">
+                      <button @click="decreaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">-</button>
+                      <span>{{ item.quantity }}</span>
+                      <button @click="increaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">+</button>
+                    </div>
+                    <div class="text-indigo-600">{{ formatPrice(item.price * item.quantity) }}</div>
+                    <div v-if="item.note" class="text-sm text-gray-500 mt-1">
+                      Ghi chú: {{ item.note }}
+                    </div>
                   </div>
-                  <div class="text-indigo-600">{{ formatPrice(item.price * item.quantity) }}</div>
+                  <button @click="removeFromCart(item)" class="text-red-500 hover:text-red-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
                 </div>
-                <button @click="removeFromCart(item)" class="text-red-500 hover:text-red-700">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                  </svg>
-                </button>
               </div>
             </div>
           </div>
@@ -284,24 +351,94 @@
     >
       <div v-if="isAddToCartModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4">
-          <div class="fixed inset-0 bg-black opacity-50"></div>
-          <div class="relative bg-white rounded-lg max-w-md w-full p-6">
-            <div class="text-center">
-              <h3 class="text-lg font-bold mb-4">Thêm vào giỏ hàng</h3>
-              <div v-if="selectedDish" class="mb-4">
-                <img :src="selectedDish.image" :alt="selectedDish.name" class="w-full h-48 object-cover rounded mb-4">
-                <h4 class="font-bold">{{ selectedDish.name }}</h4>
-                <p class="text-gray-600">{{ selectedDish.description }}</p>
-                <div class="text-indigo-600 font-bold mt-2">{{ formatPrice(selectedDish.price) }}</div>
+          <!-- Backdrop with blur effect -->
+          <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+          
+          <!-- Modal Content -->
+          <div class="relative bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all">
+            <!-- Header Image -->
+            <div v-if="selectedDish" class="relative h-48">
+              <img :src="selectedDish.image" 
+                   :alt="selectedDish.name" 
+                   class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              
+              <!-- Close Button -->
+              <button @click="closeAddToCartModal" 
+                      class="absolute top-4 right-4 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+              
+              <!-- Dish Name & Price -->
+              <div class="absolute bottom-4 left-4 right-4">
+                <h3 class="text-xl font-bold text-white mb-1">{{ selectedDish.name }}</h3>
+                <div class="text-white/90 text-sm">{{ selectedDish.description }}</div>
               </div>
-              <div class="flex justify-end space-x-4">
-                <button @click="closeAddToCartModal" 
-                        class="px-4 py-2 border rounded hover:bg-gray-100 transition duration-300">
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+              <!-- Price -->
+              <div class="text-center">
+                <span class="text-2xl font-bold text-indigo-600">
+                  {{ formatPrice(selectedDish?.price || 0) }}
+                </span>
+              </div>
+
+              <!-- Quantity Selector -->
+              <div class="flex items-center justify-center">
+                <div class="flex items-center space-x-4 bg-gray-50 px-4 py-2 rounded-full">
+                  <button @click="orderQuantity > 1 && orderQuantity--"
+                          class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-600 transition-colors">
+                    <i class="fas fa-minus text-sm"></i>
+                  </button>
+                  <span class="w-8 text-center font-medium">{{ orderQuantity }}</span>
+                  <button @click="orderQuantity++"
+                          class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-600 transition-colors">
+                    <i class="fas fa-plus text-sm"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Special Notes -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">
+                  Ghi chú đặc biệt
+                </label>
+                <div class="relative">
+                  <textarea 
+                    v-model="orderNote"
+                    rows="2"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
+                    placeholder="VD: Không hành, ít cay..."
+                  ></textarea>
+                  <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+                    {{ orderNote.length }}/100
+                  </div>
+                </div>
+              </div>
+
+              <!-- Total Price -->
+              <div class="flex justify-between items-center py-3 border-t border-gray-100">
+                <span class="text-gray-600">Tổng cộng</span>
+                <span class="text-xl font-bold text-indigo-600">
+                  {{ formatPrice((selectedDish?.price || 0) * orderQuantity) }}
+                </span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-3">
+                <button @click="closeAddToCartModal"
+                        class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors">
                   Hủy
                 </button>
-                <button @click="confirmAddToCart" 
-                        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">
-                  Thêm vào giỏ
+                <button @click="confirmAddToCart"
+                        class="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors
+                               flex items-center justify-center gap-2">
+                  <i class="fas fa-cart-plus"></i>
+                  <span>Thêm vào giỏ</span>
                 </button>
               </div>
             </div>
@@ -332,6 +469,8 @@ const isAddToCartModalOpen = ref(false)
 const selectedCategory = ref('Khai vị')
 const selectedDish = ref(null)
 const cart = ref([])
+const orderNote = ref('')
+const orderQuantity = ref(1)
 
 // Menu items
 const menuItems = [
@@ -412,17 +551,36 @@ const contactForm = ref({
 // Additional methods
 const openAddToCartModal = (dish) => {
   selectedDish.value = dish
+  orderNote.value = ''
+  orderQuantity.value = 1
   isAddToCartModalOpen.value = true
 }
 
 const closeAddToCartModal = () => {
   selectedDish.value = null
+  orderNote.value = ''
+  orderQuantity.value = 1
   isAddToCartModalOpen.value = false
 }
 
 const confirmAddToCart = () => {
   if (selectedDish.value) {
-    addToCart(selectedDish.value)
+    const item = {
+      ...selectedDish.value,
+      quantity: orderQuantity.value,
+      note: orderNote.value.trim()
+    }
+    
+    const existingItem = cart.value.find(i => 
+      i.id === item.id && i.note === item.note
+    )
+    
+    if (existingItem) {
+      existingItem.quantity += orderQuantity.value
+    } else {
+      cart.value.push(item)
+    }
+    
     closeAddToCartModal()
   }
 }
@@ -583,6 +741,32 @@ h1, h2, h3 {
   font-family: 'Playfair Display', serif;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
 .hero-image {
   background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
   background-size: cover;
@@ -654,5 +838,42 @@ h1, h2, h3 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #4338ca;
+}
+</style>
+
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+textarea {
+  min-height: 60px;
+  max-height: 120px;
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
 }
 </style>
