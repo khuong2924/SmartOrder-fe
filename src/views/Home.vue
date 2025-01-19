@@ -11,7 +11,7 @@
             <i class="fas fa-utensils text-2xl transition-all duration-300"
                :class="{'text-white transform rotate-12': scrolled, 
                        'text-white/90 group-hover:text-white': !scrolled}"></i>
-            <span class="text-2xl font-bold font-playfair tracking-wider transition-all duration-300"
+            <span class="text-2xl font-svn-avo-bold tracking-wider transition-all duration-300"
                   :class="{'text-white': scrolled,
                           'text-white/90 group-hover:text-white': !scrolled}">
               Nhà hàng Ngon
@@ -19,16 +19,31 @@
           </a>
 
           <!-- Desktop Menu -->
-          <div class="hidden md:flex items-center space-x-8">
+          <div class="hidden md:flex font-svn-avo-bold items-center space-x-4">
+            <!-- Menu Items -->
             <a v-for="item in menuItems"
                :key="item.href"
                :href="item.href"
                class="relative overflow-hidden group py-2"
                :class="{'text-white/80 hover:text-white': scrolled,
-                       'text-white/70 hover:text-white': !scrolled}">
+                        'text-white/70 hover:text-white': !scrolled}">
               <span class="relative z-10">{{ item.text }}</span>
               <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
             </a>
+
+            <!-- Auth Menu -->
+            <div ref="authMenuRef" class="relative" v-click-outside="closeAuthMenu">
+              <button @click="logout"
+                      class="flex items-center space-x-2 p-2 rounded-full transition-all duration-300 group"
+                      :class="{'bg-white/10 hover:bg-white/20': scrolled,
+                              'hover:bg-white/10': !scrolled}">
+                <!-- User Avatar/Icon -->
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
+                  <i class="fas fa-sign-out-alt text-white"></i>
+                </div>
+                <span class="text-white/90 group-hover:text-white">Đăng xuất</span>
+              </button>
+            </div>
           </div>
 
           <!-- Cart & Mobile Menu Buttons -->
@@ -77,7 +92,7 @@
         <!-- Mobile menu content -->
         <div class="flex flex-col h-full">
           <div class="flex justify-between items-center p-4 border-b border-indigo-500">
-            <h2 class="text-2xl font-bold text-white">Menu</h2>
+            <h2 class="text-2xl font-svn-avo-bold text-white">Menu</h2>
             <button @click="isMobileMenuOpen = false" class="text-white hover:text-indigo-200">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -102,7 +117,7 @@
       <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
       <div id="tsparticles" class="absolute inset-0"></div>
       <div class="relative z-10 text-center">
-        <h1 class="text-6xl md:text-7xl font-bold mb-4 animate__animated animate__fadeInDown 
+        <h1 class="text-6xl mb-4 md:text-7xl font-svn-avo-bold animate__animated animate__fadeInDown 
                    bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
           Nhà hàng Ngon
         </h1>
@@ -119,7 +134,7 @@
     <!-- Featured Dishes Section -->
     <section id="featured" class="py-20 bg-white">
       <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Món Nổi bật</h2>
+        <h2 class="text-4xl font-svn-avo-bold text-center mb-12" data-aos="fade-up">Món nổi bật</h2>
         <div class="swiper-container" data-aos="fade-up" data-aos-delay="200">
           <div class="swiper-wrapper">
             <div v-for="dish in featuredDishes" 
@@ -143,7 +158,7 @@
                   </div>
                 </div>
                 <div class="p-6">
-                  <h3 class="text-2xl font-bold mb-2">{{ dish.name }}</h3>
+                  <h3 class="text-2xl font-svn-avo-bold mb-2">{{ dish.name }}</h3>
                   <p class="text-gray-600 mb-4">{{ dish.description }}</p>
                   <div class="flex justify-between items-center">
                     <span class="text-indigo-600 font-bold text-xl">{{ formatPrice(dish.price) }}</span>
@@ -183,7 +198,7 @@
                         'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg': selectedCategory === category,
                         'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
                       }">
-                <!-- Icon (you can add different icons for each category) -->
+                
                 <span class="absolute left-3 top-1/2 -translate-y-1/2">
                   <i :class="{
                     'fas fa-utensils': category === 'Món chính',
@@ -194,7 +209,7 @@
                 </span>
                 
                 <!-- Category name -->
-                <span class="font-medium">{{ category }}</span>
+                <span class="font-svn-avo-bold">{{ category }}</span>
                 
                 <!-- Active indicator -->
                 <span v-if="selectedCategory === category" 
@@ -208,21 +223,7 @@
             <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent md:hidden"></div>
           </div>
           
-          <!-- Category description -->
-          <div class="text-center mt-6 text-gray-600 animate__animated animate__fadeIn">
-            <p v-if="selectedCategory === 'Món chính'">
-              Các món ăn chính đặc trưng của nhà hàng
-            </p>
-            <p v-else-if="selectedCategory === 'Khai vị'">
-              Khai vị đa dạng để mở đầu bữa ăn
-            </p>
-            <p v-else-if="selectedCategory === 'Tráng miệng'">
-              Tráng miệng ngọt ngào để kết thúc hoàn hảo
-            </p>
-            <p v-else-if="selectedCategory === 'Đồ uống'">
-              Đồ uống phong phú và độc đáo
-            </p>
-          </div>
+          
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="dish in filteredDishes" 
@@ -231,7 +232,7 @@
                data-aos="fade-up">
             <img :src="dish.image" :alt="dish.name" class="w-full h-48 object-cover">
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-2">{{ dish.name }}</h3>
+              <h3 class="text-xl font-svn-avo-bold mb-2">{{ dish.name }}</h3>
               <p class="text-gray-600 mb-4">{{ dish.description }}</p>
               <div class="flex justify-between items-center">
                 <span class="text-indigo-600 font-bold">{{ formatPrice(dish.price) }}</span>
@@ -246,35 +247,6 @@
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-white">
-      <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Liên Hệ</h2>
-        <div class="max-w-3xl mx-auto">
-          <form @submit.prevent="submitContact" class="space-y-6" data-aos="fade-up">
-            <div>
-              <label class="block text-gray-700 mb-2">Họ và tên</label>
-              <input v-model="contactForm.name" type="text" required
-                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
-            </div>
-            <div>
-              <label class="block text-gray-700 mb-2">Email</label>
-              <input v-model="contactForm.email" type="email" required
-                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
-            </div>
-            <div>
-              <label class="block text-gray-700 mb-2">Tin nhắn</label>
-              <textarea v-model="contactForm.message" required rows="4"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"></textarea>
-            </div>
-            <button type="submit" 
-                    class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-300">
-              Gửi tin nhắn
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
 
     <!-- Cart Sidebar -->
     <Transition
@@ -289,7 +261,7 @@
            class="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-lg z-50">
         <div class="flex flex-col h-full">
           <div class="flex justify-between items-center p-4 border-b">
-            <h3 class="text-lg font-bold">Giỏ hàng</h3>
+            <h3 class="text-lg font-svn-avo-bold">Giỏ hàng</h3>
             <button @click="isCartOpen = false" class="text-gray-500 hover:text-gray-700">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -305,7 +277,7 @@
                 <div class="flex items-center space-x-4">
                   <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded">
                   <div class="flex-1">
-                    <h4 class="font-bold">{{ item.name }}</h4>
+                    <h4 class="font-svn-avo-bold">{{ item.name }}</h4>
                     <div class="flex items-center space-x-2">
                       <button @click="decreaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">-</button>
                       <span>{{ item.quantity }}</span>
@@ -327,7 +299,7 @@
           </div>
           <div class="border-t p-4">
             <div class="flex justify-between items-center mb-4">
-              <span class="font-bold">Tổng cộng:</span>
+              <span class="font-svn-avo-bold">Tổng cộng:</span>
               <span class="text-xl font-bold text-indigo-600">{{ formatPrice(total) }}</span>
             </div>
             <button @click="placeOrder" 
@@ -373,7 +345,7 @@
               
               <!-- Dish Name & Price -->
               <div class="absolute bottom-4 left-4 right-4">
-                <h3 class="text-xl font-bold text-white mb-1">{{ selectedDish.name }}</h3>
+                <h3 class="text-xl font-svn-avo-bold text-white mb-1">{{ selectedDish.name }}</h3>
                 <div class="text-white/90 text-sm">{{ selectedDish.description }}</div>
               </div>
             </div>
@@ -382,7 +354,7 @@
             <div class="p-6 space-y-6">
               <!-- Price -->
               <div class="text-center">
-                <span class="text-2xl font-bold text-indigo-600">
+                <span class="text-2xl font-svn-avo-bold text-indigo-600">
                   {{ formatPrice(selectedDish?.price || 0) }}
                 </span>
               </div>
@@ -394,7 +366,7 @@
                           class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-600 transition-colors">
                     <i class="fas fa-minus text-sm"></i>
                   </button>
-                  <span class="w-8 text-center font-medium">{{ orderQuantity }}</span>
+                  <span class="w-8 text-center font-svn-avo-bold">{{ orderQuantity }}</span>
                   <button @click="orderQuantity++"
                           class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-600 transition-colors">
                     <i class="fas fa-plus text-sm"></i>
@@ -404,7 +376,7 @@
 
               <!-- Special Notes -->
               <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">
+                <label class="block text-sm font-svn-avo-bold text-gray-700">
                   Ghi chú đặc biệt
                 </label>
                 <div class="relative">
@@ -423,7 +395,7 @@
               <!-- Total Price -->
               <div class="flex justify-between items-center py-3 border-t border-gray-100">
                 <span class="text-gray-600">Tổng cộng</span>
-                <span class="text-xl font-bold text-indigo-600">
+                <span class="text-xl font-svn-avo-bold text-indigo-600">
                   {{ formatPrice((selectedDish?.price || 0) * orderQuantity) }}
                 </span>
               </div>
@@ -446,22 +418,170 @@
         </div>
       </div>
     </Transition>
+
+    <!-- Login Modal -->
+    <Transition
+      enter-active-class="ease-out duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="ease-in duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="isLoginModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+          <!-- Backdrop -->
+          <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeLoginModal"></div>
+          
+          <!-- Modal Content -->
+          <div class="relative bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all"
+               data-aos="fade-up" data-aos-duration="1000">
+            <div class="p-8">
+              <h2 class="text-3xl font-svn-avo-bold text-center text-gray-700 mb-6">Đăng nhập</h2>
+              <form @submit.prevent="handleLogin" class="space-y-6">
+                <!-- Email Input -->
+                <div>
+                  <label for="username" class="block text-sm font-svn-avo-bold text-gray-700 mb-1">Username</label>
+                  <input type="text" 
+                         id="username"
+                         v-model="loginForm.username" 
+                         required
+                         class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-300"
+                         :class="{'border-red-500': loginErrors.username}">
+                  <p v-if="loginErrors.username" class="text-red-500 text-xs mt-1">{{ loginErrors.username }}</p>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                  <label class="block text-sm font-svn-avo-bold text-gray-700 mb-1">Mật khẩu</label>
+                  <div class="relative">
+                    <input :type="showPassword ? 'text' : 'password'"
+                           v-model="loginForm.password" required
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-300"
+                           :class="{'border-red-500': loginErrors.password}">
+                    <button type="button" @click="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
+                  </div>
+                  <p v-if="loginErrors.password" class="text-red-500 text-xs mt-1">{{ loginErrors.password }}</p>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <input type="checkbox" v-model="loginForm.remember"
+                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <label class="ml-2 block text-sm text-gray-700">Ghi nhớ đăng nhập</label>
+                  </div>
+                  <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 transition duration-300">
+                    Quên mật khẩu?
+                  </a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="w-full flex justify-center items-center px-4 py-2 rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 transform hover:scale-105">
+                  <i class="fas fa-lock mr-2"></i>
+                  Đăng nhập
+                </button>
+              </form>
+
+              <!-- Register Link -->
+              <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                  Chưa có tài khoản? 
+                  <a @click="switchToRegister" 
+                     class="text-indigo-600 hover:text-indigo-500 font-svn-avo-bold transition duration-300 cursor-pointer">
+                    Đăng ký ngay
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Success Modal -->
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="transform opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="transform opacity-0"
+    >
+      <div v-if="isSuccessModalOpen" 
+           class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-svn-avo-bold">Thành công!</strong>
+          <span class="block sm:inline"> Đăng nhập thành công.</span>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, defineComponent } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Swiper from 'swiper'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
 import AOS from 'aos'
-import 'aos/dist/aos.css'
-import 'animate.css'
 import { tsParticles } from "tsparticles-engine"
+import axios from 'axios'
+import { useRouter } from 'vue-router'
 
-// State
+import { onClickOutside } from '@vueuse/core'
+import { useAuthStore } from '@/store/auth'
+
+// Auth State
+const isAuthMenuOpen = ref(false)
+const isLoggedIn = ref(false)
+const user = ref(null)
+const showPassword = ref(false)
+
+const loginForm = ref({
+  username: '',
+  password: '',
+  remember: false
+})
+
+const loginErrors = ref({
+  1: '',
+  password: ''
+})
+
+const authMenuRef = ref(null)
+onClickOutside(authMenuRef, () => {
+  isAuthMenuOpen.value = false
+})
+
+// Auth Methods
+const closeLoginModal = () => {
+  isLoginModalOpen.value = false
+}
+
+const validateLoginForm = () => {
+  const errors = { email: '', password: '' }
+  
+  if (!loginForm.value.password) {
+    errors.password = 'Mật khẩu là bắt buộc'
+  } else if (loginForm.value.password.length < 6) {
+    errors.password = 'Mật khẩu phải có ít nhất 6 ký tự'
+  }
+
+  loginErrors.value = errors
+  return !errors.email && !errors.password
+}
+
+const authStore = useAuthStore()
+
+const logout = () => {
+  authStore.logout() // Sẽ tự động chuyển hướng về trang login (đã setup trong auth store)
+}
+
+// Existing state
 const scrolled = ref(false)
 const isMobileMenuOpen = ref(false)
 const isCartOpen = ref(false)
@@ -477,7 +597,7 @@ const menuItems = [
   { href: '#hero', text: 'Trang chủ' },
   { href: '#featured', text: 'Món Nổi bật' },
   { href: '#menu', text: 'Thực đơn' },
-  { href: '#contact', text: 'Liên hệ' }
+
 ]
 
 // Data
@@ -641,56 +761,66 @@ const sendContactForm = async (formData) => {
 }
 
 // Initialize AOS and Swiper on component mount
-onMounted(async () => {
-  AOS.init({
-    duration: 1000,
-    once: true
-  })
+const router = useRouter()
+
+// onMounted(async () => {
+//   const token = localStorage.getItem('token')
+//   if (!token) {
+//     router.push('/login')
+//   }
+
+//   AOS.init({
+//     duration: 1000,
+//     once: true
+//   })
   
-  new Swiper('.swiper-container', {
-    modules: [Navigation, Pagination, Autoplay],
-    slidesPerView: 1,
-    spaceBetween: 20,
-    loop: true,
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    breakpoints: {
-      640: {
-        slidesPerView: 2,
-      },
-      1024: {
-        slidesPerView: 3,
-      },
-    },
-  })
+//   new Swiper('.swiper-container', {
+//     loop: featuredDishes.length > 3, // Only enable loop if enough slides
+//     slidesPerView: 1,
+//     slidesPerGroup: 1,
+//     modules: [Navigation, Pagination, Autoplay],
+//     slidesPerView: 1,
+//     spaceBetween: 20,
+//     loop: true,
+//     autoplay: {
+//       delay: 3000,
+//       disableOnInteraction: false,
+//     },
+//     pagination: {
+//       el: '.swiper-pagination',
+//       clickable: true,
+//     },
+//     navigation: {
+//       nextEl: '.swiper-button-next',
+//       prevEl: '.swiper-button-prev',
+//     },
+//     breakpoints: {
+//       640: {
+//         slidesPerView: 2,
+//       },
+//       1024: {
+//         slidesPerView: 3,
+//       },
+//     },
+//   })
 
-  // Scroll handler
-  window.addEventListener('scroll', () => {
-    scrolled.value = window.pageYOffset > 20
-  })
+//   // Scroll handler
+//   window.addEventListener('scroll', () => {
+//     scrolled.value = window.pageYOffset > 20
+//   })
 
-  // Close mobile menu on outside click
-  document.addEventListener('click', (e) => {
-    if (isMobileMenuOpen.value && 
-        !e.target.closest('.mobile-menu') && 
-        !e.target.closest('button')) {
-      isMobileMenuOpen.value = false
-    }
-  })
+//   // Close mobile menu on outside click
+//   document.addEventListener('click', (e) => {
+//     if (isMobileMenuOpen.value && 
+//         !e.target.closest('.mobile-menu') && 
+//         !e.target.closest('button')) {
+//       isMobileMenuOpen.value = false
+//     }
+//   })
 
-  // Initialize particles
-  await tsParticles.load("tsparticles", particlesOptions)
-})
+//   // Initialize particles
+//   await tsParticles.load("tsparticles", particlesOptions)
+// })
 
 // Particles setup
 const particlesInit = async (engine) => {
@@ -728,18 +858,34 @@ const particlesOptions = {
     }
   }
 }
+
+const closeAuthMenu = () => {
+  isAuthMenuOpen.value = false
+}
+
+// Modify existing methods
+const openLoginModal = () => {
+  isAuthMenuOpen.value = false
+  isLoginModalOpen.value = true
+  loginForm.value = { username: '', password: '', remember: false }
+  loginErrors.value = { username: '', password: '' }
+}
+
+const openRegisterModal = () => {
+  isAuthMenuOpen.value = false
+  // Implement register modal logic
+}
+
+const switchToRegister = () => {
+  closeLoginModal()
+  // Implement register modal logic here  
+}
 </script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
 
-body {
-  font-family: 'Roboto', sans-serif;
-}
 
-h1, h2, h3 {
-  font-family: 'Playfair Display', serif;
-}
 
 .scrollbar-hide {
   -ms-overflow-style: none;

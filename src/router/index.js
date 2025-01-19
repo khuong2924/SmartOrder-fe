@@ -1,17 +1,44 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
+import Login from '@/views/Login.vue';
+import Home from '@/views/Home.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login'
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
+});
+
+// Add navigation guard
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('token');
+  
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    // Redirect to login if trying to access protected route without auth
+    next('/login');
+  } else if (to.path === '/login' && isAuthenticated) {
+    // Redirect to home if already logged in
+    next('/');
+  } else {
+    next();
+  }
 });
 
 export default router;
