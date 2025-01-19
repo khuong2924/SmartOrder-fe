@@ -763,64 +763,64 @@ const sendContactForm = async (formData) => {
 // Initialize AOS and Swiper on component mount
 const router = useRouter()
 
-// onMounted(async () => {
-//   const token = localStorage.getItem('token')
-//   if (!token) {
-//     router.push('/login')
-//   }
+onMounted(async () => {
+  // const token = localStorage.getItem('token')
+  // if (!token) {
+  //   router.push('/login')
+  // }
 
-//   AOS.init({
-//     duration: 1000,
-//     once: true
-//   })
+  AOS.init({
+    duration: 1000,
+    once: true
+  })
   
-//   new Swiper('.swiper-container', {
-//     loop: featuredDishes.length > 3, // Only enable loop if enough slides
-//     slidesPerView: 1,
-//     slidesPerGroup: 1,
-//     modules: [Navigation, Pagination, Autoplay],
-//     slidesPerView: 1,
-//     spaceBetween: 20,
-//     loop: true,
-//     autoplay: {
-//       delay: 3000,
-//       disableOnInteraction: false,
-//     },
-//     pagination: {
-//       el: '.swiper-pagination',
-//       clickable: true,
-//     },
-//     navigation: {
-//       nextEl: '.swiper-button-next',
-//       prevEl: '.swiper-button-prev',
-//     },
-//     breakpoints: {
-//       640: {
-//         slidesPerView: 2,
-//       },
-//       1024: {
-//         slidesPerView: 3,
-//       },
-//     },
-//   })
+  new Swiper('.swiper-container', {
+    loop: featuredDishes.length > 3, // Only enable loop if enough slides
+    slidesPerView: 1,
+    slidesPerGroup: 1,
+    modules: [Navigation, Pagination, Autoplay],
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 3,
+      },
+    },
+  })
 
-//   // Scroll handler
-//   window.addEventListener('scroll', () => {
-//     scrolled.value = window.pageYOffset > 20
-//   })
+  // Scroll handler
+  window.addEventListener('scroll', () => {
+    scrolled.value = window.pageYOffset > 20
+  })
 
-//   // Close mobile menu on outside click
-//   document.addEventListener('click', (e) => {
-//     if (isMobileMenuOpen.value && 
-//         !e.target.closest('.mobile-menu') && 
-//         !e.target.closest('button')) {
-//       isMobileMenuOpen.value = false
-//     }
-//   })
+  // Close mobile menu on outside click
+  document.addEventListener('click', (e) => {
+    if (isMobileMenuOpen.value && 
+        !e.target.closest('.mobile-menu') && 
+        !e.target.closest('button')) {
+      isMobileMenuOpen.value = false
+    }
+  })
 
-//   // Initialize particles
-//   await tsParticles.load("tsparticles", particlesOptions)
-// })
+  // Initialize particles
+  await tsParticles.load("tsparticles", particlesOptions)
+})
 
 // Particles setup
 const particlesInit = async (engine) => {
