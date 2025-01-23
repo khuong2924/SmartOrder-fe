@@ -150,41 +150,86 @@
           <div class="swiper-wrapper">
             <div v-for="dish in featuredDishes" 
                  :key="dish.id" 
-                 class="swiper-slide">
-              <div class="bg-white rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div class="relative overflow-hidden group">
+                 class="swiper-slide p-4">
+              <div class="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl 
+                          transform hover:-translate-y-2 transition-all duration-500">
+                <!-- Image Container -->
+                <div class="relative h-72 overflow-hidden">
                   <img :src="dish.image" 
                        :alt="dish.name" 
-                       class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent 
-                              opacity-0 group-hover:opacity-100 transition-all duration-300 
-                              flex items-center justify-center">
-                    <button @click="openAddToCartModal(dish)" 
-                            class="bg-white/90 text-indigo-600 px-6 py-3 rounded-full 
-                                   hover:bg-indigo-600 hover:text-white transition duration-300 
-                                   transform hover:scale-105 flex items-center gap-2">
-                      <i class="fas fa-cart-plus"></i>
-                      Thêm vào giỏ
-                    </button>
+                       class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                  
+                  <!-- Featured Badge -->
+                  <div class="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 
+                              text-white px-4 py-1 rounded-full text-sm font-medium shadow-lg">
+                    Nổi bật
+                  </div>
+                  
+                  <!-- Price Badge -->
+                  <div class="absolute top-4 right-4 bg-white/95 text-indigo-600 px-4 py-2 
+                              rounded-full font-bold shadow-lg backdrop-blur-sm">
+                    {{ formatPrice(dish.price) }}
+                  </div>
+                  
+                  <!-- Gradient Overlay -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  
+                  <!-- Bottom Content -->
+                  <div class="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 class="text-2xl font-svn-avo-bold text-white mb-2">{{ dish.name }}</h3>
+                    <p class="text-white/90 text-sm mb-4 line-clamp-2">{{ dish.description }}</p>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3">
+                      <button @click="openAddToCartModal(dish)"
+                              class="flex-1 bg-white/90 text-indigo-600 px-6 py-3 rounded-xl 
+                                     hover:bg-indigo-600 hover:text-white transition-all duration-300
+                                     transform hover:scale-105 flex items-center justify-center gap-2">
+                        <i class="fas fa-cart-plus"></i>
+                        Thêm vào giỏ
+                      </button>
+                      <button class="w-12 h-12 bg-white/20 text-white rounded-xl hover:bg-white/30
+                                     flex items-center justify-center backdrop-blur-sm">
+                        <i class="fas fa-heart"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div class="p-6">
-                  <h3 class="text-2xl font-svn-avo-bold mb-2">{{ dish.name }}</h3>
-                  <p class="text-gray-600 mb-4">{{ dish.description }}</p>
-                  <div class="flex justify-between items-center">
-                    <span class="text-indigo-600 font-bold text-xl">{{ formatPrice(dish.price) }}</span>
-                    <button @click="openAddToCartModal(dish)" 
-                            class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300">
-                      Thêm vào giỏ
-                    </button>
+                
+                <!-- Additional Info -->
+                <div class="p-6 bg-white">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                      <div class="flex items-center gap-1">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <span class="font-medium">4.8</span>
+                      </div>
+                      <span class="text-gray-300">|</span>
+                      <div class="flex items-center gap-1 text-gray-600">
+                        <i class="fas fa-clock"></i>
+                        <span>15-20 phút</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <span v-if="dish.spicy" 
+                            class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">
+                        <i class="fas fa-pepper-hot"></i>
+                      </span>
+                      <span v-if="dish.vegetarian" 
+                            class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
+                        <i class="fas fa-leaf"></i>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          <!-- Swiper Navigation -->
+          <div class="swiper-button-next after:text-indigo-600"></div>
+          <div class="swiper-button-prev after:text-indigo-600"></div>
+          <!-- Swiper Pagination -->
           <div class="swiper-pagination"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
         </div>
       </div>
     </section>
@@ -247,27 +292,24 @@
                    :alt="dish.name" 
                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
               
+              <!-- Price Badge - Always visible -->
+              <div class="absolute top-4 right-4 bg-white/95 text-indigo-600 px-4 py-2 rounded-full 
+                          font-bold shadow-lg backdrop-blur-sm transform group-hover:scale-110 transition-all duration-300">
+                {{ formatPrice(dish.price) }}
+              </div>
+              
               <!-- Overlay with Quick Actions -->
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
                           opacity-0 group-hover:opacity-100 transition-all duration-300
                           flex flex-col justify-end p-6">
-                <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <!-- Price Badge -->
-                  <div class="inline-block bg-white/90 text-indigo-600 px-4 py-2 rounded-full font-bold mb-4
-                              shadow-lg backdrop-blur-sm">
-                    {{ formatPrice(dish.price) }}
-                  </div>
-                  
-                  <!-- Quick Add Button -->
-                  <button @click="openAddToCartModal(dish)"
-                          class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
-                                 px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 
-                                 transform hover:scale-105 transition-all duration-300
-                                 flex items-center justify-center gap-2 shadow-lg">
-                    <i class="fas fa-cart-plus"></i>
-                    Thêm vào giỏ
-                  </button>
-                </div>
+                <button @click="openAddToCartModal(dish)"
+                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                               px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 
+                               transform hover:scale-105 transition-all duration-300
+                               flex items-center justify-center gap-2 shadow-lg">
+                  <i class="fas fa-cart-plus"></i>
+                  Thêm vào giỏ
+                </button>
               </div>
             </div>
 
@@ -275,9 +317,15 @@
             <div class="p-6">
               <!-- Title & Description -->
               <div class="mb-4">
-                <h3 class="text-xl font-svn-avo-bold mb-2 group-hover:text-indigo-600 transition-colors">
-                  {{ dish.name }}
-                </h3>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-xl font-svn-avo-bold group-hover:text-indigo-600 transition-colors line-clamp-1">
+                    {{ dish.name }}
+                  </h3>
+                  <div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <span class="text-sm font-medium text-yellow-700">4.8</span>
+                  </div>
+                </div>
                 <p class="text-gray-600 text-sm line-clamp-2">{{ dish.description }}</p>
               </div>
 
@@ -286,7 +334,6 @@
                 <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
                   {{ dish.category }}
                 </span>
-                <!-- Add more tags as needed -->
                 <span v-if="dish.spicy" 
                       class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">
                   <i class="fas fa-pepper-hot mr-1"></i> Cay
@@ -299,24 +346,16 @@
 
               <!-- Bottom Actions -->
               <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                <div class="flex items-center gap-2">
-                  <div class="flex text-yellow-400">
-                    <i class="fas fa-star"></i>
-                    <span class="ml-1 text-gray-600 text-sm">4.8</span>
-                  </div>
-                  <span class="text-gray-400">|</span>
-                  <span class="text-gray-600 text-sm">
-                    <i class="fas fa-clock text-gray-400 mr-1"></i>
-                    15-20 phút
-                  </span>
-                </div>
-                
-                <!-- Quick Add Button (Alternative) -->
+                <span class="text-gray-600 text-sm flex items-center gap-2">
+                  <i class="fas fa-clock text-indigo-400"></i>
+                  15-20 phút
+                </span>
                 <button @click="openAddToCartModal(dish)"
-                        class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600
-                               hover:bg-indigo-600 hover:text-white
-                               flex items-center justify-center transition-all duration-300">
-                  <i class="fas fa-plus"></i>
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700
+                               transform hover:scale-105 transition-all duration-300
+                               flex items-center gap-2">
+                  <i class="fas fa-cart-plus"></i>
+                  Thêm vào giỏ
                 </button>
               </div>
             </div>
@@ -1126,5 +1165,35 @@ textarea::-webkit-scrollbar-thumb {
 
 textarea::-webkit-scrollbar-thumb:hover {
   background: #ccc;
+}
+
+/* Swiper Navigation Buttons */
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+  color: theme('colors.indigo.600');
+  background-color: theme('colors.white');
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+:deep(.swiper-button-next:after),
+:deep(.swiper-button-prev:after) {
+  font-size: 1.2rem;
+}
+
+:deep(.swiper-pagination-bullet) {
+  background: theme('colors.indigo.600');
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  background: theme('colors.indigo.600');
+}
+
+/* Glass Morphism */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 </style>
