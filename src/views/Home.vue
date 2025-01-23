@@ -46,8 +46,18 @@
             </div>
           </div>
 
-          <!-- Cart & Mobile Menu Buttons -->
+          <!-- Right Section: Table Number, Cart & Mobile Menu -->
           <div class="flex items-center space-x-6">
+            <!-- Table Number Badge -->
+            <div v-if="currentTableNumber" 
+                 class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full flex items-center">
+              <i class="fas fa-table text-white/90 mr-2"></i>
+              <span class="text-white font-svn-avo-bold">
+                Bàn {{ currentTableNumber }}
+              </span>
+            </div>
+
+            <!-- Cart Button -->
             <button @click="isCartOpen = !isCartOpen"
                     class="relative group">
               <svg class="w-6 h-6 transition-all duration-300"
@@ -63,6 +73,7 @@
               </span>
             </button>
 
+            <!-- Mobile Menu Button -->
             <button @click="isMobileMenuOpen = !isMobileMenuOpen"
                     class="md:hidden group">
               <svg class="w-6 h-6 transition-all duration-300"
@@ -520,6 +531,93 @@
         </div>
       </div>
     </Transition>
+
+    <!-- Thêm vào phần template, sau các modal khác -->
+    <Transition
+      enter-active-class="ease-out duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="ease-in duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="showNewOrderModal" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+          <!-- Backdrop with blur -->
+          <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeNewOrderModal"></div>
+          
+          <!-- Modal Content -->
+          <div class="relative bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all"
+               data-aos="fade-up" data-aos-duration="1000">
+            <div class="p-8">
+              <h2 class="text-2xl font-svn-avo-bold text-center text-gray-800 mb-6">
+                Tạo đơn hàng mới
+              </h2>
+
+              <form @submit.prevent="handleCreateOrder" class="space-y-6">
+                <!-- Số bàn -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Số bàn
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-table text-gray-400"></i>
+                    </div>
+                    <input 
+                      v-model="newOrder.tableNumber"
+                      type="number"
+                      required
+                      min="1"
+                      class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="Nhập số bàn"
+                    >
+                  </div>
+                </div>
+
+                <!-- Số khách -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Số lượng khách
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <i class="fas fa-users text-gray-400"></i>
+                    </div>
+                    <input 
+                      v-model="newOrder.guestCount"
+                      type="number"
+                      required
+                      min="1"
+                      class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="Nhập số lượng khách"
+                    >
+                  </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    @click="closeNewOrderModal"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    type="submit"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <i class="fas fa-door-open"></i>
+                    Mở bàn
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -820,6 +918,13 @@ onMounted(async () => {
 
   // Initialize particles
   await tsParticles.load("tsparticles", particlesOptions)
+
+  // Check if table is already opened (you can get this from your store or API)
+  const existingTableNumber = localStorage.getItem('currentTableNumber')
+  if (existingTableNumber) {
+    currentTableNumber.value = existingTableNumber
+    showNewOrderModal.value = false
+  }
 })
 
 // Particles setup
@@ -879,6 +984,39 @@ const openRegisterModal = () => {
 const switchToRegister = () => {
   closeLoginModal()
   // Implement register modal logic here  
+}
+
+// Thêm các ref mới
+const showNewOrderModal = ref(true) // Hiển thị modal khi vào trang
+const currentTableNumber = ref(null)
+const newOrder = ref({
+  tableNumber: '',
+  guestCount: ''
+})
+
+// Thêm các methods mới
+const closeNewOrderModal = () => {
+  showNewOrderModal.value = false
+}
+
+const handleCreateOrder = () => {
+  // Validate input
+  if (!newOrder.value.tableNumber || !newOrder.value.guestCount) {
+    return
+  }
+
+  // Set current table number
+  currentTableNumber.value = newOrder.value.tableNumber
+
+  // Create new order logic here
+  // You can call your API or store the order data
+
+  // Reset form and close modal
+  newOrder.value = {
+    tableNumber: '',
+    guestCount: ''
+  }
+  showNewOrderModal.value = false
 }
 </script>
 

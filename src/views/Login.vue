@@ -1,45 +1,83 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Decorative circles -->
+    <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-200 to-purple-200 opacity-50 blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-tr from-pink-200 to-indigo-200 opacity-50 blur-3xl"></div>
+
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Đăng nhập vào tài khoản
+      <!-- Logo -->
+      <div class="flex justify-center">
+        <div class="w-20 h-20 rounded-full bg-white shadow-lg flex items-center justify-center transform hover:rotate-12 transition-transform duration-300">
+          <i class="fas fa-utensils text-4xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"></i>
+        </div>
+      </div>
+      
+      <h2 class="mt-6 text-center text-3xl font-utm-avo-bold text-gray-900">
+        Login
       </h2>
+      
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div class="bg-white/80 py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 transform transition-all duration-300">
         <form class="space-y-6" @submit.prevent="handleLogin">
+          <!-- Username field -->
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">
               Tên đăng nhập
             </label>
-            <div class="mt-1">
+            <div class="mt-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-user text-gray-400"></i>
+              </div>
               <input 
                 id="username" 
                 v-model="loginForm.username"
                 type="text" 
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                :class="{'border-red-500': loginErrors.username}"
+                class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                :class="{'border-red-500 ring-red-500': loginErrors.username}"
+                placeholder="Nhập tên đăng nhập"
               >
-              <p v-if="loginErrors.username" class="mt-2 text-sm text-red-600">{{ loginErrors.username }}</p>
+              <p v-if="loginErrors.username" class="mt-2 text-sm text-red-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                {{ loginErrors.username }}
+              </p>
             </div>
           </div>
 
+          <!-- Password field -->
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">
               Mật khẩu
             </label>
-            <div class="mt-1">
+            <div class="mt-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-lock text-gray-400"></i>
+              </div>
               <input 
                 id="password" 
                 v-model="loginForm.password"
-                type="password" 
+                :type="showPassword ? 'text' : 'password'"
                 required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                :class="{'border-red-500': loginErrors.password}"
+                class="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                :class="{'border-red-500 ring-red-500': loginErrors.password}"
+                placeholder="Nhập mật khẩu"
               >
-              <p v-if="loginErrors.password" class="mt-2 text-sm text-red-600">{{ loginErrors.password }}</p>
+              <button 
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <i 
+                  class="fas text-gray-400 hover:text-gray-600" 
+                  :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                ></i>
+              </button>
+              <p v-if="loginErrors.password" class="mt-2 text-sm text-red-600 flex items-center">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                {{ loginErrors.password }}
+              </p>
             </div>
           </div>
 
@@ -48,15 +86,16 @@
               <input 
                 id="remember-me" 
                 type="checkbox"
+                v-model="loginForm.remember"
                 class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
               >
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+              <label for="remember-me" class="ml-2 block text-sm text-gray-700">
                 Ghi nhớ đăng nhập
               </label>
             </div>
 
             <div class="text-sm">
-              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
                 Quên mật khẩu?
               </a>
             </div>
@@ -65,54 +104,24 @@
           <div>
             <button 
               type="submit"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:scale-[1.02] transition-all duration-300"
             >
+              <i class="fas fa-sign-in-alt mr-2"></i>
               Đăng nhập
             </button>
           </div>
         </form>
 
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">
-                Hoặc tiếp tục với
-              </span>
-            </div>
-          </div>
 
-          <div class="mt-6 grid grid-cols-3 gap-3">
-            <div>
-              <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                <span class="sr-only">Sign in with Facebook</span>
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </div>
-
-            <div>
-              <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                <span class="sr-only">Sign in with Twitter</span>
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-                </svg>
-              </a>
-            </div>
-
-            <div>
-              <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                <span class="sr-only">Sign in with GitHub</span>
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
+        <!-- Register Link -->
+        <!-- <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Chưa có tài khoản? 
+            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+              Đăng ký ngay
+            </a>
+          </p>
+        </div> -->
       </div>
     </div>
   </div>
@@ -127,13 +136,16 @@ const router = useRouter()
 
 const loginForm = ref({
   username: '',
-  password: ''
+  password: '',
+  remember: false
 })
 
 const loginErrors = ref({
   username: '',
   password: ''
 })
+
+const showPassword = ref(false)
 
 // Kiểm tra đăng nhập khi component được mount
 onMounted(() => {
@@ -183,4 +195,30 @@ const handleLogin = async () => {
     }
   }
 }
-</script> 
+</script>
+
+<style scoped>
+/* Add smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add animation for form inputs */
+input, button {
+  transition: all 0.3s ease;
+}
+
+/* Add hover effect for social buttons */
+.social-button {
+  transition: transform 0.3s ease;
+}
+
+.social-button:hover {
+  transform: translateY(-2px);
+}
+
+/* Add custom box shadow for form container */
+.form-container {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+</style> 
