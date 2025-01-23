@@ -239,17 +239,84 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="dish in filteredDishes" 
                :key="dish.id"
-               class="bg-white rounded-lg shadow-lg overflow-hidden"
+               class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500"
                data-aos="fade-up">
-            <img :src="dish.image" :alt="dish.name" class="w-full h-48 object-cover">
+            <!-- Image Container -->
+            <div class="relative h-64 overflow-hidden">
+              <img :src="dish.image" 
+                   :alt="dish.name" 
+                   class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+              
+              <!-- Overlay with Quick Actions -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
+                          opacity-0 group-hover:opacity-100 transition-all duration-300
+                          flex flex-col justify-end p-6">
+                <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <!-- Price Badge -->
+                  <div class="inline-block bg-white/90 text-indigo-600 px-4 py-2 rounded-full font-bold mb-4
+                              shadow-lg backdrop-blur-sm">
+                    {{ formatPrice(dish.price) }}
+                  </div>
+                  
+                  <!-- Quick Add Button -->
+                  <button @click="openAddToCartModal(dish)"
+                          class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                                 px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 
+                                 transform hover:scale-105 transition-all duration-300
+                                 flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fas fa-cart-plus"></i>
+                    Thêm vào giỏ
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
             <div class="p-6">
-              <h3 class="text-xl font-svn-avo-bold mb-2">{{ dish.name }}</h3>
-              <p class="text-gray-600 mb-4">{{ dish.description }}</p>
-              <div class="flex justify-between items-center">
-                <span class="text-indigo-600 font-bold">{{ formatPrice(dish.price) }}</span>
-                <button @click="openAddToCartModal(dish)" 
-                        class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition duration-300">
-                  Thêm vào giỏ
+              <!-- Title & Description -->
+              <div class="mb-4">
+                <h3 class="text-xl font-svn-avo-bold mb-2 group-hover:text-indigo-600 transition-colors">
+                  {{ dish.name }}
+                </h3>
+                <p class="text-gray-600 text-sm line-clamp-2">{{ dish.description }}</p>
+              </div>
+
+              <!-- Tags/Attributes -->
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
+                  {{ dish.category }}
+                </span>
+                <!-- Add more tags as needed -->
+                <span v-if="dish.spicy" 
+                      class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">
+                  <i class="fas fa-pepper-hot mr-1"></i> Cay
+                </span>
+                <span v-if="dish.vegetarian" 
+                      class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
+                  <i class="fas fa-leaf mr-1"></i> Chay
+                </span>
+              </div>
+
+              <!-- Bottom Actions -->
+              <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div class="flex items-center gap-2">
+                  <div class="flex text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <span class="ml-1 text-gray-600 text-sm">4.8</span>
+                  </div>
+                  <span class="text-gray-400">|</span>
+                  <span class="text-gray-600 text-sm">
+                    <i class="fas fa-clock text-gray-400 mr-1"></i>
+                    15-20 phút
+                  </span>
+                </div>
+                
+                <!-- Quick Add Button (Alternative) -->
+                <button @click="openAddToCartModal(dish)"
+                        class="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600
+                               hover:bg-indigo-600 hover:text-white
+                               flex items-center justify-center transition-all duration-300">
+                  <i class="fas fa-plus"></i>
                 </button>
               </div>
             </div>
@@ -430,107 +497,7 @@
       </div>
     </Transition>
 
-    <!-- Login Modal -->
-    <Transition
-      enter-active-class="ease-out duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="ease-in duration-200"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="isLoginModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen px-4">
-          <!-- Backdrop -->
-          <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeLoginModal"></div>
-          
-          <!-- Modal Content -->
-          <div class="relative bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all"
-               data-aos="fade-up" data-aos-duration="1000">
-            <div class="p-8">
-              <h2 class="text-3xl font-svn-avo-bold text-center text-gray-700 mb-6">Đăng nhập</h2>
-              <form @submit.prevent="handleLogin" class="space-y-6">
-                <!-- Email Input -->
-                <div>
-                  <label for="username" class="block text-sm font-svn-avo-bold text-gray-700 mb-1">Username</label>
-                  <input type="text" 
-                         id="username"
-                         v-model="loginForm.username" 
-                         required
-                         class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-300"
-                         :class="{'border-red-500': loginErrors.username}">
-                  <p v-if="loginErrors.username" class="text-red-500 text-xs mt-1">{{ loginErrors.username }}</p>
-                </div>
-
-                <!-- Password Input -->
-                <div>
-                  <label class="block text-sm font-svn-avo-bold text-gray-700 mb-1">Mật khẩu</label>
-                  <div class="relative">
-                    <input :type="showPassword ? 'text' : 'password'"
-                           v-model="loginForm.password" required
-                           class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-300"
-                           :class="{'border-red-500': loginErrors.password}">
-                    <button type="button" @click="showPassword = !showPassword"
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                      <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-                    </button>
-                  </div>
-                  <p v-if="loginErrors.password" class="text-red-500 text-xs mt-1">{{ loginErrors.password }}</p>
-                </div>
-
-                <!-- Remember Me & Forgot Password -->
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <input type="checkbox" v-model="loginForm.remember"
-                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label class="ml-2 block text-sm text-gray-700">Ghi nhớ đăng nhập</label>
-                  </div>
-                  <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 transition duration-300">
-                    Quên mật khẩu?
-                  </a>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit"
-                        class="w-full flex justify-center items-center px-4 py-2 rounded-md text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 transform hover:scale-105">
-                  <i class="fas fa-lock mr-2"></i>
-                  Đăng nhập
-                </button>
-              </form>
-
-              <!-- Register Link -->
-              <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                  Chưa có tài khoản? 
-                  <a @click="switchToRegister" 
-                     class="text-indigo-600 hover:text-indigo-500 font-svn-avo-bold transition duration-300 cursor-pointer">
-                    Đăng ký ngay
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
-    <!-- Success Modal -->
-    <Transition
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="transform opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="transform opacity-0"
-    >
-      <div v-if="isSuccessModalOpen" 
-           class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-          <strong class="font-svn-avo-bold">Thành công!</strong>
-          <span class="block sm:inline"> Đăng nhập thành công.</span>
-        </div>
-      </div>
-    </Transition>
+    
 
     <!-- Thêm vào phần template, sau các modal khác -->
     <Transition
