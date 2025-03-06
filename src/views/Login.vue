@@ -175,7 +175,7 @@ const validateLoginForm = () => {
 const handleLogin = async () => {
   if (validateLoginForm()) {
     try {
-      const response = await axios.post('http://localhost:8080/auth/signin', {
+      const response = await axios.post('http://localhost:8081/auth/signin', {
         username: loginForm.value.username,
         password: loginForm.value.password
       })
@@ -183,8 +183,8 @@ const handleLogin = async () => {
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user', JSON.stringify(response.data))
       
-      // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-      router.push('/')
+      // Chuyển hướng đến trang danh sách bàn sau khi đăng nhập thành công
+      router.push('/tables')
       
     } catch (error) {
       if (error.response) {
@@ -221,4 +221,4 @@ input, button {
 .form-container {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
-</style> 
+</style>
