@@ -4,6 +4,11 @@ import App from './App.vue'
 import router from './router'
 import { useAuthStore } from './store/auth'
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'aos/dist/aos.css'
+import 'animate.css'
 
 
 const app = createApp(App)

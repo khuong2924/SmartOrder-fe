@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 const Home = () => import('@/views/Home.vue');
 const Login = () => import('@/views/Login.vue');
+const Tables = () => import('@/views/Tables.vue'); // Changed to lazy loading
 
 const routes = [
   {
@@ -16,6 +17,12 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/table', // Make sure this matches the path you're navigating to
+    name: 'Tables',
+    component: Tables,
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/login'
   }
@@ -27,19 +34,19 @@ const router = createRouter({
 });
 
 // Add navigation guard
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('token');
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = localStorage.getItem('token');
   
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    // Redirect to login if trying to access protected route without auth
-    next('/login');
-  } else if (to.path === '/login' && isAuthenticated) {
-    // Redirect to home if already logged in
-    next('/');
-  } else {
-    next();
-  }
-});
+//   if (to.meta.requiresAuth && !isAuthenticated) {
+//     // Redirect to login if trying to access protected route without auth
+//     next('/login');
+//   } else if (to.path === '/login' && isAuthenticated) {
+//     // Redirect to home if already logged in
+//     next('/table');
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
 

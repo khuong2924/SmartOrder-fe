@@ -6,9 +6,9 @@
       getStatusClass(table.status)
     ]"
   >
-    <!-- Table visualization -->
+    <!-- Table visualization with improved design -->
     <div class="p-4 flex flex-col items-center">
-      <!-- Table shape based on capacity -->
+      <!-- Table shape based on capacity with 3D effect -->
       <div 
         class="table-shape relative mb-3"
         :class="[
@@ -17,56 +17,64 @@
           'w-20 h-16 rounded-lg'
         ]"
       >
-        <!-- Table number -->
+        <!-- Table number with improved typography -->
         <div class="absolute inset-0 flex items-center justify-center">
-          <span class="text-lg font-bold">{{ table.number }}</span>
+          <span class="text-lg font-bold table-number">{{ table.number }}</span>
         </div>
         
-        <!-- Status indicator -->
+        <!-- Enhanced status indicator with pulse effect -->
         <div 
-          class="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
+          class="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white status-indicator"
           :class="getStatusIndicatorClass(table.status)"
         ></div>
         
-        <!-- Chair indicators -->
+        <!-- Chair indicators with improved styling -->
         <div class="chairs-container absolute">
           <div 
             v-for="i in getChairPositions(table.capacity)" 
             :key="i.position"
-            class="chair absolute w-3 h-3 rounded-full bg-gray-400"
-            :class="{'bg-gray-600': table.status === 'occupied'}"
+            class="chair absolute w-3 h-3 rounded-full transition-all duration-300"
+            :class="{'chair-occupied': table.status === 'occupied', 'chair-available': table.status === 'available'}"
             :style="i.style"
           ></div>
         </div>
       </div>
       
-      <!-- Table info -->
+      <!-- Table info with improved typography -->
       <div class="text-center">
         <p class="font-medium text-sm">{{ table.capacity }} người</p>
-        <p class="text-xs text-gray-500">{{ getStatusText(table.status) }}</p>
+        <p class="text-xs status-text" :class="getStatusTextColor(table.status)">
+          {{ getStatusText(table.status) }}
+        </p>
       </div>
     </div>
     
-    <!-- Quick action overlay (appears on hover) -->
-    <div class="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+    <!-- Improved quick action overlay with blur effect -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 hover:opacity-100 transition-all duration-300 flex items-center justify-center">
       <button 
-        class="px-3 py-1.5 bg-white rounded-lg text-sm font-medium text-indigo-600 hover:bg-indigo-50 transition-colors"
+        class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-indigo-600 hover:bg-indigo-50 transition-colors shadow-lg transform hover:scale-105 transition-transform duration-300"
       >
+        <i class="fas mr-2" :class="getActionIcon(table.status)"></i>
         {{ getActionText(table.status) }}
       </button>
     </div>
     
-    <!-- Animation effect for occupied tables -->
+    <!-- Enhanced animation effect for occupied tables -->
     <div 
       v-if="table.status === 'occupied'"
-      class="absolute inset-0 bg-gradient-to-r from-red-500/10 to-transparent animate-pulse-slow"
+      class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent animate-pulse-slow"
     ></div>
     
-    <!-- Animation effect for reserved tables -->
+    <!-- Enhanced animation effect for reserved tables -->
     <div 
       v-if="table.status === 'reserved'"
-      class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-transparent animate-pulse-slow"
+      class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-transparent animate-pulse-slow"
     ></div>
+    
+    <!-- Decorative elements -->
+    <div v-if="table.type === 'vip'" class="absolute top-1 left-1">
+      <i class="fas fa-crown text-amber-400 text-xs animate-bounce-slow"></i>
+    </div>
   </div>
 </template>
 
@@ -101,13 +109,13 @@ const getStatusClass = (status) => {
 const getStatusIndicatorClass = (status) => {
   switch (status) {
     case 'available':
-      return 'bg-green-500';
+      return 'bg-green-500 animate-pulse';
     case 'occupied':
       return 'bg-red-500';
     case 'reserved':
-      return 'bg-yellow-500';
+      return 'bg-yellow-500 animate-pulse';
     default:
-      return 'bg-gray-500';
+      return 'hidden'; // Thêm case mặc định để ẩn indicator
   }
 };
 
@@ -124,6 +132,19 @@ const getStatusText = (status) => {
   }
 };
 
+const getStatusTextColor = (status) => {
+  switch (status) {
+    case 'available':
+      return 'text-green-600 font-medium';
+    case 'occupied':
+      return 'text-red-600 font-medium';
+    case 'reserved':
+      return 'text-yellow-600 font-medium';
+    default:
+      return 'text-gray-600';
+  }
+};
+
 const getActionText = (status) => {
   switch (status) {
     case 'available':
@@ -134,6 +155,19 @@ const getActionText = (status) => {
       return 'Xác nhận';
     default:
       return 'Chọn';
+  }
+};
+
+const getActionIcon = (status) => {
+  switch (status) {
+    case 'available':
+      return 'fa-utensils';
+    case 'occupied':
+      return 'fa-info-circle';
+    case 'reserved':
+      return 'fa-check-circle';
+    default:
+      return 'fa-hand-pointer';
   }
 };
 
@@ -167,14 +201,46 @@ const getChairPositions = (capacity) => {
 
 <style scoped>
 .table-shape {
-  background: linear-gradient(to bottom right, #ffffff, #f3f4f6);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1), 
+              -5px -5px 10px rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .table-item:hover .table-shape {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.1), 
+              -8px -8px 15px rgba(255, 255, 255, 0.8);
+}
+
+.table-number {
+  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.chair {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chair-occupied {
+  background-color: #4b5563;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chair-available {
+  background-color: #9ca3af;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-indicator {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.status-text {
+  letter-spacing: 0.5px;
 }
 
 @keyframes pulse-slow {
@@ -188,5 +254,38 @@ const getChairPositions = (capacity) => {
 
 .animate-pulse-slow {
   animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Thêm hiệu ứng hover cho table item */
+.table-item {
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.table-item:hover {
+  transform: translateY(-5px) scale(1.03);
+}
+
+/* Thêm hiệu ứng đổ bóng khi hover */
+.table-item {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.table-item:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 </style>

@@ -183,8 +183,8 @@ const handleLogin = async () => {
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user', JSON.stringify(response.data))
       
-      // Chuyển hướng đến trang danh sách bàn sau khi đăng nhập thành công
-      router.push('/tables')
+      // Chuyển hướng đến trang /table sau khi đăng nhập thành công
+      await router.push('/table')
       
     } catch (error) {
       if (error.response) {
