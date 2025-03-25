@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800 flex items-center">
-          <i class="fas fa-chair text-indigo-600 mr-3"></i>
+        
           Danh sách bàn
         </h1>
         

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 const Home = () => import('@/views/Home.vue');
 const Login = () => import('@/views/Login.vue');
-const Tables = () => import('@/views/Tables.vue'); // Changed to lazy loading
+const Tables = () => import('@/views/Tables.vue');
 
 const routes = [
   {
@@ -17,7 +17,7 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/table', // Make sure this matches the path you're navigating to
+    path: '/table',
     name: 'Tables',
     component: Tables,
     meta: { requiresAuth: true }

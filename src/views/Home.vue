@@ -14,7 +14,7 @@
             <span class="text-2xl font-svn-avo-bold tracking-wider transition-all duration-300"
                   :class="{'text-white': scrolled,
                           'text-white/90 group-hover:text-white': !scrolled}">
-              Nhà hàng Ngon
+              Smart Order
             </span>
           </a>
 
@@ -123,24 +123,65 @@
       </div>
     </Transition>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero-image h-screen flex items-center justify-center text-white relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
-      <div id="tsparticles" class="absolute inset-0"></div>
-      <div class="relative z-10 text-center">
-        <h1 class="text-6xl mb-4 md:text-7xl font-svn-avo-bold animate__animated animate__fadeInDown 
-                   bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">
-          Nhà hàng Ngon
-        </h1>
-        <p class="text-xl md:text-2xl mb-8 animate__animated animate__fadeInUp animate__delay-1s">
-          Hương vị truyền thống - Không gian hiện đại
-        </p>
-        <a href="#menu" 
-           class="bg-indigo-600 text-white px-8 py-3 rounded-full hover:bg-indigo-700 transition duration-300 animate__animated animate__fadeInUp animate__delay-2s">
-          Xem Thực đơn
-        </a>
-      </div>
-    </section>
+        <!-- Hero Section -->
+        <section id="hero" class="hero-image h-screen flex items-center justify-center text-white relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+          <div id="tsparticles" class="absolute inset-0"></div>
+          
+          <!-- Enhanced Hero Content -->
+          <div class="relative z-10 text-center max-w-4xl px-6">
+            <!-- Decorative elements -->
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"></div>
+            
+            <!-- Restaurant logo icon with animation -->
+            <div class="inline-block mb-6 p-4 rounded-full bg-white/10 backdrop-blur-md animate__animated animate__fadeInDown">
+              <i class="fas fa-utensils text-4xl text-white"></i>
+            </div>
+            
+            <!-- Main heading with enhanced styling -->
+            <h1 class="text-6xl mb-6 md:text-7xl font-svn-avo-bold animate__animated animate__fadeInDown 
+                       bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent
+                       drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] tracking-tight">
+              Nhà hàng Ngon
+            </h1>
+            
+            <!-- Tagline with decorative elements -->
+            <div class="relative mb-10">
+              <div class="h-px w-20 bg-gradient-to-r from-transparent via-white/60 to-transparent absolute -left-24 top-1/2 hidden md:block"></div>
+              <p class="text-xl md:text-2xl animate__animated animate__fadeInUp animate__delay-1s
+                        font-light tracking-wide">
+                Hương vị truyền thống - Không gian hiện đại
+              </p>
+              <div class="h-px w-20 bg-gradient-to-r from-transparent via-white/60 to-transparent absolute -right-24 top-1/2 hidden md:block"></div>
+            </div>
+            
+            <!-- Call to action buttons with enhanced styling -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate__animated animate__fadeInUp animate__delay-2s">
+              <a href="#menu" 
+                 class="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
+                        hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300
+                        shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                <i class="fas fa-utensils"></i>
+                Xem Thực đơn
+              </a>
+              <a href="#featured" 
+                 class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20
+                        hover:bg-white/20 transform hover:scale-105 transition-all duration-300
+                        flex items-center justify-center gap-2">
+                <i class="fas fa-star"></i>
+                Món nổi bật
+              </a>
+            </div>
+            
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
+              <a href="#featured" class="text-white/70 hover:text-white transition-colors">
+                <i class="fas fa-chevron-down"></i>
+              </a>
+            </div>
+          </div>
+        </section>
 
     <!-- Featured Dishes Section -->
     <section id="featured" class="py-20 bg-white">
@@ -239,48 +280,75 @@
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
         <!-- Menu Categories -->
-        <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
-          <div class="relative max-w-4xl mx-auto">
-            <!-- Background decoration -->
-            <div class="absolute inset-0 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-2xl transform -rotate-1"></div>
-            
-            <!-- Categories container -->
-            <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
-              <button v-for="category in categories" 
-                      :key="category"
-                      @click="selectedCategory = category"
-                      class="group relative px-8 py-3 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-105"
-                      :class="{
-                        'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg': selectedCategory === category,
-                        'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
-                      }">
-                
-                <span class="absolute left-3 top-1/2 -translate-y-1/2">
-                  <i :class="{
-                    'fas fa-utensils': category === 'Món chính',
-                    'fas fa-coffee': category === 'Đồ uống',
-                    'fas fa-leaf': category === 'Khai vị',
-                    'fas fa-ice-cream': category === 'Tráng miệng'
-                  }" class="text-sm"></i>
+          <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
+            <div class="relative max-w-4xl mx-auto">
+              <!-- Decorative background elements -->
+              <div class="absolute inset-0 rounded-2xl transform -rotate-1"></div>
+              <div class="absolute -left-4 -right-4 -top-4 -bottom-4  rounded-3xl transform rotate-1 blur-lg"></div>
+              
+              <!-- Interactive categories container -->
+              <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
+                <button v-for="category in categories" 
+                        :key="category"
+                        @click="selectedCategory = category"
+                        class="group relative px-8 py-3.5 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-110 shadow-sm"
+                        :class="{
+                          'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md': selectedCategory === category,
+                          'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
+                        }">
+                  
+                  <!-- Category icon with animation -->
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:scale-125">
+                    <i :class="[
+                        {
+                          'fas fa-utensils': category === 'Món chính',
+                          'fas fa-coffee': category === 'Đồ uống',
+                          'fas fa-leaf': category === 'Khai vị',
+                          'fas fa-ice-cream': category === 'Tráng miệng'
+                        }, 
+                        selectedCategory === category ? 'text-white' : 'text-indigo-500',
+                        'text-sm'
+                      ]"></i>
+                  </span>
+                  
+                  <!-- Category name with transition effects -->
+                  <span class="font-svn-avo-bold transition-all duration-300 relative">
+                    {{ category }}
+                    <!-- Underline animation for selected category -->
+                    <span v-if="selectedCategory === category" 
+                          class="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/70 transform origin-left scale-x-100 transition-transform"></span>
+                  </span>
+                  
+                  <!-- Decorative particles for selected category -->
+                  <span v-if="selectedCategory === category" 
+                        class="absolute -right-1 -top-1 w-3 h-3 bg-white rounded-full opacity-70 animate-ping"></span>
+                        
+                  <!-- Active indicator with pulse animation -->
+                  <span v-if="selectedCategory === category" 
+                        class="absolute -bottom-1 left-1/2 w-12 h-1 bg-white rounded-full transform -translate-x-1/2
+                              shadow-lg animate-pulse"></span>
+                              
+                  <!-- Badge counter (optional - you can add dish counts per category) -->
+                  <span v-if="selectedCategory === category" 
+                        class="absolute -top-2 -right-2 bg-white text-indigo-600 text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">
+                    {{ filteredDishes.length }}
+                  </span>
+                </button>
+              </div>
+              
+              <!-- Enhanced scroll indicators with gradients (only on mobile) -->
+              <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent md:hidden pointer-events-none"></div>
+              <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent md:hidden pointer-events-none"></div>
+              
+              <!-- Optional: Animation hint for mobile users -->
+              <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 md:hidden">
+                <span class="text-xs text-gray-400 flex items-center gap-1">
+                  <i class="fas fa-arrows-left-right text-gray-300 animate-pulse"></i>
+                  Vuốt để xem thêm
                 </span>
-                
-                <!-- Category name -->
-                <span class="font-svn-avo-bold">{{ category }}</span>
-                
-                <!-- Active indicator -->
-                <span v-if="selectedCategory === category" 
-                      class="absolute -bottom-1 left-1/2 w-12 h-1 bg-white rounded-full transform -translate-x-1/2
-                             shadow-lg animate-pulse"></span>
-              </button>
+              </div>
             </div>
-            
-            <!-- Scroll indicators (only on mobile) -->
-            <div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent md:hidden"></div>
-            <div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent md:hidden"></div>
           </div>
-          
-          
-        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="dish in filteredDishes" 
                :key="dish.id"

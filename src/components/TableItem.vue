@@ -29,15 +29,7 @@
         ></div>
         
         <!-- Chair indicators with improved styling -->
-        <div class="chairs-container absolute">
-          <div 
-            v-for="i in getChairPositions(table.capacity)" 
-            :key="i.position"
-            class="chair absolute w-3 h-3 rounded-full transition-all duration-300"
-            :class="{'chair-occupied': table.status === 'occupied', 'chair-available': table.status === 'available'}"
-            :style="i.style"
-          ></div>
-        </div>
+        
       </div>
       
       <!-- Table info with improved typography -->
