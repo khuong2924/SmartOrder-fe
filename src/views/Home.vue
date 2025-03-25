@@ -1,151 +1,12 @@
 <template>
   <div>
-    <!-- Header -->
-    <header 
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-    :class="{
-      'bg-primary/95 shadow-lg': scrolled,
-      'bg-transparent': !scrolled
-    }"
-  >
-    <div class="absolute inset-0 overflow-hidden" v-if="scrolled">
-      <div class="absolute inset-0 bg-primary/90 backdrop-blur-md"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary-dark/90"></div>
-    </div>
-    
-    <nav class="container mx-auto px-6 py-3 relative">
-      <div class="flex justify-between items-center">
-        <!-- Logo -->
-        <a href="#" class="flex text-[#018ABE] items-center space-x-3 group">
-        
-          <div class="flex flex-col">
-            <span class="text-3xl font-bold tracking-wider text-white">
-              Smart Order
-            </span>
-           
-          </div>
-        </a>
-
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex font-medium items-center space-x-6">
-          <!-- Menu Items -->
-          <a 
-            v-for="item in menuItems" 
-            :key="item.href" 
-            :href="item.href"
-            class="relative py-2 px-1 text-white/90 hover:text-[#018ABE] transition-colors duration-300 group"
-          >
-            <span class="relative z-10">{{ item.text }}</span>
-            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
-          </a>
-        </div>
-
-        <!-- Right Section: Table Number, Cart & Mobile Menu -->
-        <div class="flex items-center space-x-4">
-          <!-- Table Number Badge -->
-          <div 
-            v-if="currentTableNumber" 
-            class="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full flex items-center shadow-lg"
-          >
-            <i class="fas fa-table text-white/90 mr-2"></i>
-            <span class="text-white font-medium">
-              Bàn {{ currentTableNumber }}
-            </span>
-          </div>
-
-          <!-- Auth Button -->
-          <button 
-            @click="logout"
-            class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/10 hover:bg-white/20 group"
-          >
-            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary-light to-primary flex items-center justify-center">
-              <i class="fas fa-sign-out-alt text-white"></i>
-            </div>
-            <span class="text-white/90 group-hover:text-white">Đăng xuất</span>
-          </button>
-
-          <!-- Cart Button -->
-          <button 
-            @click="isCartOpen = !isCartOpen"
-            class="relative group p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
-          >
-            <svg 
-              class="w-6 h-6 text-white"
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            <span 
-              v-if="cartItemCount > 0"
-              class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform scale-100 transition-transform duration-300 animate-pulse"
-            >
-              {{ cartItemCount }}
-            </span>
-          </button>
-
-          <!-- Mobile Menu Button -->
-          <button 
-            @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
-          >
-            <svg 
-              class="w-6 h-6 text-white"
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                v-if="!isMobileMenuOpen"
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-              <path 
-                v-else
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Mobile Menu (Slide Down) -->
-      <div 
-        v-if="isMobileMenuOpen"
-        class="md:hidden absolute left-0 right-0 top-full bg-primary/95 backdrop-blur-md shadow-lg rounded-b-xl overflow-hidden transition-all duration-300 transform origin-top"
-        :class="{'scale-y-100 opacity-100': isMobileMenuOpen, 'scale-y-0 opacity-0': !isMobileMenuOpen}"
-      >
-        <div class="px-6 py-4 space-y-3">
-          <a 
-            v-for="item in menuItems" 
-            :key="item.href" 
-            :href="item.href"
-            class="block py-2 px-4 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
-          >
-            {{ item.text }}
-          </a>
-          <button 
-            @click="logout"
-            class="w-full flex items-center space-x-2 p-4 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20"
-          >
-            <i class="fas fa-sign-out-alt text-white/90"></i>
-            <span class="text-white/90">Đăng xuất</span>
-          </button>
-        </div>
-      </div>
-    </nav>
-  </header>
+    <Header 
+      :menu-items="menuItems"
+      :cart-item-count="cartItemCount"
+      :current-table-number="currentTableNumber"
+      @logout="logout"
+      @toggle-cart="isCartOpen = !isCartOpen"
+    />
 
     <!-- Mobile Menu -->
     <Transition
@@ -407,86 +268,10 @@
               </div>
             </div>
           </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="dish in filteredDishes" 
-               :key="dish.id"
-               class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500"
-               data-aos="fade-up">
-            <!-- Image Container -->
-            <div class="relative h-64 overflow-hidden">
-              <img :src="dish.image" 
-                   :alt="dish.name" 
-                   class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-              
-              <!-- Price Badge - Always visible -->
-              <div class="absolute top-4 right-4 bg-white/95 text-[#018ABE] px-4 py-2 rounded-full 
-                          font-bold shadow-lg backdrop-blur-sm transform group-hover:scale-110 transition-all duration-300">
-                {{ formatPrice(dish.price) }}
-              </div>
-              
-              <!-- Overlay with Quick Actions -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
-                          opacity-0 group-hover:opacity-100 transition-all duration-300
-                          flex flex-col justify-end p-6">
-                <button @click="openAddToCartModal(dish)"
-                        class="w-full bg-gradient-to-r from-blue-600 to-blue-400 text-white 
-                               px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-700 
-                               transform hover:scale-105 transition-all duration-300
-                               flex items-center justify-center gap-2 shadow-lg">
-                  <i class="fas fa-cart-plus"></i>
-                  Thêm vào giỏ
-                </button>
-              </div>
-            </div>
-
-            <!-- Content -->
-            <div class="p-6">
-              <!-- Title & Description -->
-              <div class="mb-4">
-                <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-xl font-svn-avo-bold group-hover:text-[#018ABE] transition-colors line-clamp-1">
-                    {{ dish.name }}
-                  </h3>
-                  <div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <span class="text-sm font-medium text-yellow-700">4.8</span>
-                  </div>
-                </div>
-                <p class="text-gray-600 text-sm line-clamp-2">{{ dish.description }}</p>
-              </div>
-
-              <!-- Tags/Attributes -->
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="px-3 py-1 bg-blue-100 text-[#018ABE] rounded-full text-xs font-medium">
-                  {{ dish.category }}
-                </span>
-                <span v-if="dish.spicy" 
-                      class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">
-                  <i class="fas fa-pepper-hot mr-1"></i> Cay
-                </span>
-                <span v-if="dish.vegetarian" 
-                      class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
-                  <i class="fas fa-leaf mr-1"></i> Chay
-                </span>
-              </div>
-
-              <!-- Bottom Actions -->
-              <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                <span class="text-gray-600 text-sm flex items-center gap-2">
-                  <i class="fas fa-clock text-[#018ABE]"></i>
-                  15-20 phút
-                </span>
-                <button @click="openAddToCartModal(dish)"
-                        class="bg-[#018ABE] text-white px-4 py-2 rounded-full hover:bg-blue-700
-                               transform hover:scale-105 transition-all duration-300
-                               flex items-center gap-2">
-                  <i class="fas fa-cart-plus"></i>
-                  Thêm vào giỏ
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <MenuItems 
+          :dishes="filteredDishes" 
+          @open-add-to-cart-modal="openAddToCartModal" 
+        />
       </div>
     </section>
 
@@ -668,16 +453,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import Swiper from 'swiper'
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import AOS from 'aos'
-import { tsParticles } from "tsparticles-engine"
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-
-import { onClickOutside } from '@vueuse/core'
-import { useAuthStore } from '@/store/auth'
+import { ref, onMounted, computed } from 'vue';
+import Swiper from 'swiper';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import AOS from 'aos';
+import { tsParticles } from "tsparticles-engine";
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { onClickOutside } from '@vueuse/core';
+import { useAuthStore } from '@/store/auth';
+import MenuItems from '@/components/MenuItems.vue';
+import Header from '@/components/Header.vue'; 
 
 // Auth State
 const isAuthMenuOpen = ref(false)
