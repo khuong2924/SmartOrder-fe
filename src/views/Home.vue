@@ -1,93 +1,151 @@
 <template>
   <div>
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-            :class="{'bg-gradient-to-r from-indigo-900/95 to-purple-900/95 shadow-lg': scrolled,
-                    'bg-transparent': !scrolled}">
-      <nav class="container mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
-          <!-- Logo -->
-          <a href="#" class="flex items-center space-x-3 group">
-            <i class="fas fa-utensils text-2xl transition-all duration-300"
-               :class="{'text-white transform rotate-12': scrolled, 
-                       'text-white/90 group-hover:text-white': !scrolled}"></i>
-            <span class="text-2xl font-svn-avo-bold tracking-wider transition-all duration-300"
-                  :class="{'text-white': scrolled,
-                          'text-white/90 group-hover:text-white': !scrolled}">
+    <header 
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+    :class="{
+      'bg-primary/95 shadow-lg': scrolled,
+      'bg-transparent': !scrolled
+    }"
+  >
+    <div class="absolute inset-0 overflow-hidden" v-if="scrolled">
+      <div class="absolute inset-0 bg-primary/90 backdrop-blur-md"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary-dark/90"></div>
+    </div>
+    
+    <nav class="container mx-auto px-6 py-3 relative">
+      <div class="flex justify-between items-center">
+        <!-- Logo -->
+        <a href="#" class="flex text-[#018ABE] items-center space-x-3 group">
+        
+          <div class="flex flex-col">
+            <span class="text-3xl font-bold tracking-wider text-white">
               Smart Order
             </span>
+           
+          </div>
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex font-medium items-center space-x-6">
+          <!-- Menu Items -->
+          <a 
+            v-for="item in menuItems" 
+            :key="item.href" 
+            :href="item.href"
+            class="relative py-2 px-1 text-white/90 hover:text-[#018ABE] transition-colors duration-300 group"
+          >
+            <span class="relative z-10">{{ item.text }}</span>
+            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
           </a>
-
-          <!-- Desktop Menu -->
-          <div class="hidden md:flex font-svn-avo-bold items-center space-x-4">
-            <!-- Menu Items -->
-            <a v-for="item in menuItems"
-               :key="item.href"
-               :href="item.href"
-               class="relative overflow-hidden group py-2"
-               :class="{'text-white/80 hover:text-white': scrolled,
-                        'text-white/70 hover:text-white': !scrolled}">
-              <span class="relative z-10">{{ item.text }}</span>
-              <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-            </a>
-
-            <!-- Auth Menu -->
-            <div ref="authMenuRef" class="relative" v-click-outside="closeAuthMenu">
-              <button @click="logout"
-                      class="flex items-center space-x-2 p-2 rounded-full transition-all duration-300 group"
-                      :class="{'bg-white/10 hover:bg-white/20': scrolled,
-                              'hover:bg-white/10': !scrolled}">
-                <!-- User Avatar/Icon -->
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center">
-                  <i class="fas fa-sign-out-alt text-white"></i>
-                </div>
-                <span class="text-white/90 group-hover:text-white">Đăng xuất</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Right Section: Table Number, Cart & Mobile Menu -->
-          <div class="flex items-center space-x-6">
-            <!-- Table Number Badge -->
-            <div v-if="currentTableNumber" 
-                 class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full flex items-center">
-              <i class="fas fa-table text-white/90 mr-2"></i>
-              <span class="text-white font-svn-avo-bold">
-                Bàn {{ currentTableNumber }}
-              </span>
-            </div>
-
-            <!-- Cart Button -->
-            <button @click="isCartOpen = !isCartOpen"
-                    class="relative group">
-              <svg class="w-6 h-6 transition-all duration-300"
-                   :class="{'text-white/80 group-hover:text-white': scrolled,
-                           'text-white/70 group-hover:text-white': !scrolled}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-              <span v-if="cartItemCount > 0"
-                    class="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform scale-100 transition-transform duration-300">
-                {{ cartItemCount }}
-              </span>
-            </button>
-
-            <!-- Mobile Menu Button -->
-            <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-                    class="md:hidden group">
-              <svg class="w-6 h-6 transition-all duration-300"
-                   :class="{'text-white/80 group-hover:text-white': scrolled,
-                           'text-white/70 group-hover:text-white': !scrolled}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </button>
-          </div>
         </div>
-      </nav>
-    </header>
+
+        <!-- Right Section: Table Number, Cart & Mobile Menu -->
+        <div class="flex items-center space-x-4">
+          <!-- Table Number Badge -->
+          <div 
+            v-if="currentTableNumber" 
+            class="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full flex items-center shadow-lg"
+          >
+            <i class="fas fa-table text-white/90 mr-2"></i>
+            <span class="text-white font-medium">
+              Bàn {{ currentTableNumber }}
+            </span>
+          </div>
+
+          <!-- Auth Button -->
+          <button 
+            @click="logout"
+            class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/10 hover:bg-white/20 group"
+          >
+            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary-light to-primary flex items-center justify-center">
+              <i class="fas fa-sign-out-alt text-white"></i>
+            </div>
+            <span class="text-white/90 group-hover:text-white">Đăng xuất</span>
+          </button>
+
+          <!-- Cart Button -->
+          <button 
+            @click="isCartOpen = !isCartOpen"
+            class="relative group p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
+          >
+            <svg 
+              class="w-6 h-6 text-white"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            <span 
+              v-if="cartItemCount > 0"
+              class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform scale-100 transition-transform duration-300 animate-pulse"
+            >
+              {{ cartItemCount }}
+            </span>
+          </button>
+
+          <!-- Mobile Menu Button -->
+          <button 
+            @click="isMobileMenuOpen = !isMobileMenuOpen"
+            class="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
+          >
+            <svg 
+              class="w-6 h-6 text-white"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                v-if="!isMobileMenuOpen"
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+              <path 
+                v-else
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Menu (Slide Down) -->
+      <div 
+        v-if="isMobileMenuOpen"
+        class="md:hidden absolute left-0 right-0 top-full bg-primary/95 backdrop-blur-md shadow-lg rounded-b-xl overflow-hidden transition-all duration-300 transform origin-top"
+        :class="{'scale-y-100 opacity-100': isMobileMenuOpen, 'scale-y-0 opacity-0': !isMobileMenuOpen}"
+      >
+        <div class="px-6 py-4 space-y-3">
+          <a 
+            v-for="item in menuItems" 
+            :key="item.href" 
+            :href="item.href"
+            class="block py-2 px-4 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-200"
+          >
+            {{ item.text }}
+          </a>
+          <button 
+            @click="logout"
+            class="w-full flex items-center space-x-2 p-4 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20"
+          >
+            <i class="fas fa-sign-out-alt text-white/90"></i>
+            <span class="text-white/90">Đăng xuất</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
 
     <!-- Mobile Menu -->
     <Transition
@@ -99,12 +157,12 @@
       leave-to-class="opacity-0 transform -translate-x-full"
     >
       <div v-if="isMobileMenuOpen" 
-           class="fixed inset-0 z-50 overflow-y-auto bg-indigo-600 md:hidden mobile-menu">
+           class="fixed inset-0 z-50 overflow-y-auto bg-[#018ABE] md:hidden mobile-menu">
         <!-- Mobile menu content -->
         <div class="flex flex-col h-full">
-          <div class="flex justify-between items-center p-4 border-b border-indigo-500">
+          <div class="flex justify-between items-center p-4 border-b border-[#018ABE]">
             <h2 class="text-2xl font-svn-avo-bold text-white">Menu</h2>
-            <button @click="isMobileMenuOpen = false" class="text-white hover:text-indigo-200">
+            <button @click="isMobileMenuOpen = false" class="text-white hover:text-[#018ABE]">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
@@ -115,7 +173,7 @@
                :key="item.href"
                :href="item.href"
                @click="isMobileMenuOpen = false"
-               class="block py-2 text-lg text-white hover:text-indigo-200 transition duration-300">
+               class="block py-2 text-lg text-white hover:text-[#018ABE] transition duration-300">
               {{ item.text }}
             </a>
           </nav>
@@ -131,8 +189,8 @@
           <!-- Enhanced Hero Content -->
           <div class="relative z-10 text-center max-w-4xl px-6">
             <!-- Decorative elements -->
-            <div class="absolute -top-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-[#018ABE]-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-[#018ABE]-300-20 rounded-full blur-3xl animate-pulse"></div>
             
             <!-- Restaurant logo icon with animation -->
             <div class="inline-block mb-6 p-4 rounded-full bg-white/10 backdrop-blur-md animate__animated animate__fadeInDown">
@@ -141,7 +199,7 @@
             
             <!-- Main heading with enhanced styling -->
             <h1 class="text-6xl mb-6 md:text-7xl font-svn-avo-bold animate__animated animate__fadeInDown 
-                       bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent
+                       bg-gradient-to-r from-white via-[#018ABE]-200 to-[#018ABE] bg-clip-text text-transparent
                        drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] tracking-tight">
               Nhà hàng Ngon
             </h1>
@@ -159,9 +217,9 @@
             <!-- Call to action buttons with enhanced styling -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center animate__animated animate__fadeInUp animate__delay-2s">
               <a href="#menu" 
-                 class="px-8 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
-                        hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300
-                        shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                 class="px-8 py-4 rounded-full bg-[#018ABE] text-white 
+                        hover:from-i[#018ABE] hover:to-[#018ABE]-700 transform hover:scale-105 transition-all duration-300
+                        shadow-[#018ABE] flex items-center justify-center gap-2">
                 <i class="fas fa-utensils"></i>
                 Xem Thực đơn
               </a>
@@ -207,7 +265,7 @@
                   </div>
                   
                   <!-- Price Badge -->
-                  <div class="absolute top-4 right-4 bg-white/95 text-indigo-600 px-4 py-2 
+                  <div class="absolute top-4 right-4 bg-white/95 text-[#018ABE] px-4 py-2 
                               rounded-full font-bold shadow-lg backdrop-blur-sm">
                     {{ formatPrice(dish.price) }}
                   </div>
@@ -223,8 +281,8 @@
                     <!-- Action Buttons -->
                     <div class="flex gap-3">
                       <button @click="openAddToCartModal(dish)"
-                              class="flex-1 bg-white/90 text-indigo-600 px-6 py-3 rounded-xl 
-                                     hover:bg-indigo-600 hover:text-white transition-all duration-300
+                              class="flex-1 bg-white/90 text-[#018ABE] px-6 py-3 rounded-xl 
+                                     hover:bg-[#018ABE] hover:text-white transition-all duration-300
                                      transform hover:scale-105 flex items-center justify-center gap-2">
                         <i class="fas fa-cart-plus"></i>
                         Thêm vào giỏ
@@ -267,8 +325,8 @@
             </div>
           </div>
           <!-- Swiper Navigation -->
-          <div class="swiper-button-next after:text-indigo-600"></div>
-          <div class="swiper-button-prev after:text-indigo-600"></div>
+          <div class="swiper-button-next after:text-[#018ABE]"></div>
+          <div class="swiper-button-prev after:text-[#018ABE]"></div>
           <!-- Swiper Pagination -->
           <div class="swiper-pagination"></div>
         </div>
@@ -278,7 +336,7 @@
     <!-- Menu Section -->
     <section id="menu" class="py-20 bg-gray-100">
       <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
+        <h2 class="text-5xl text-[#018ABE] font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
         <!-- Menu Categories -->
           <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
             <div class="relative max-w-4xl mx-auto">
@@ -293,12 +351,12 @@
                         @click="selectedCategory = category"
                         class="group relative px-8 py-3.5 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-110 shadow-sm"
                         :class="{
-                          'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md': selectedCategory === category,
+                          'bg-[#018ABE] text-white shadow-md': selectedCategory === category,
                           'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
                         }">
                   
                   <!-- Category icon with animation -->
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:scale-125">
+                  <span class="absolute text-[#018ABE] left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:scale-125">
                     <i :class="[
                         {
                           'fas fa-utensils': category === 'Món chính',
@@ -306,7 +364,7 @@
                           'fas fa-leaf': category === 'Khai vị',
                           'fas fa-ice-cream': category === 'Tráng miệng'
                         }, 
-                        selectedCategory === category ? 'text-white' : 'text-indigo-500',
+                        selectedCategory === category ? 'text-white' : 'text-blue-500',
                         'text-sm'
                       ]"></i>
                   </span>
@@ -330,7 +388,7 @@
                               
                   <!-- Badge counter (optional - you can add dish counts per category) -->
                   <span v-if="selectedCategory === category" 
-                        class="absolute -top-2 -right-2 bg-white text-indigo-600 text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">
+                        class="absolute -top-2 -right-2 bg-white text-[#018ABE] text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">
                     {{ filteredDishes.length }}
                   </span>
                 </button>
@@ -361,7 +419,7 @@
                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
               
               <!-- Price Badge - Always visible -->
-              <div class="absolute top-4 right-4 bg-white/95 text-indigo-600 px-4 py-2 rounded-full 
+              <div class="absolute top-4 right-4 bg-white/95 text-[#018ABE] px-4 py-2 rounded-full 
                           font-bold shadow-lg backdrop-blur-sm transform group-hover:scale-110 transition-all duration-300">
                 {{ formatPrice(dish.price) }}
               </div>
@@ -371,8 +429,8 @@
                           opacity-0 group-hover:opacity-100 transition-all duration-300
                           flex flex-col justify-end p-6">
                 <button @click="openAddToCartModal(dish)"
-                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white 
-                               px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 
+                        class="w-full bg-gradient-to-r from-blue-600 to-blue-400 text-white 
+                               px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-700 
                                transform hover:scale-105 transition-all duration-300
                                flex items-center justify-center gap-2 shadow-lg">
                   <i class="fas fa-cart-plus"></i>
@@ -386,7 +444,7 @@
               <!-- Title & Description -->
               <div class="mb-4">
                 <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-xl font-svn-avo-bold group-hover:text-indigo-600 transition-colors line-clamp-1">
+                  <h3 class="text-xl font-svn-avo-bold group-hover:text-[#018ABE] transition-colors line-clamp-1">
                     {{ dish.name }}
                   </h3>
                   <div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
@@ -399,7 +457,7 @@
 
               <!-- Tags/Attributes -->
               <div class="flex flex-wrap gap-2 mb-4">
-                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-xs font-medium">
+                <span class="px-3 py-1 bg-blue-100 text-[#018ABE] rounded-full text-xs font-medium">
                   {{ dish.category }}
                 </span>
                 <span v-if="dish.spicy" 
@@ -415,11 +473,11 @@
               <!-- Bottom Actions -->
               <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                 <span class="text-gray-600 text-sm flex items-center gap-2">
-                  <i class="fas fa-clock text-indigo-400"></i>
+                  <i class="fas fa-clock text-[#018ABE]"></i>
                   15-20 phút
                 </span>
                 <button @click="openAddToCartModal(dish)"
-                        class="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700
+                        class="bg-[#018ABE] text-white px-4 py-2 rounded-full hover:bg-blue-700
                                transform hover:scale-105 transition-all duration-300
                                flex items-center gap-2">
                   <i class="fas fa-cart-plus"></i>
@@ -464,11 +522,11 @@
                   <div class="flex-1">
                     <h4 class="font-svn-avo-bold">{{ item.name }}</h4>
                     <div class="flex items-center space-x-2">
-                      <button @click="decreaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">-</button>
+                      <button @click="decreaseQuantity(item)" class="text-gray-500 hover:text-[#018ABE]">-</button>
                       <span>{{ item.quantity }}</span>
-                      <button @click="increaseQuantity(item)" class="text-gray-500 hover:text-indigo-600">+</button>
+                      <button @click="increaseQuantity(item)" class="text-gray-500 hover:text-[#018ABE]">+</button>
                     </div>
-                    <div class="text-indigo-600">{{ formatPrice(item.price * item.quantity) }}</div>
+                    <div class="text-[#018ABE]">{{ formatPrice(item.price * item.quantity) }}</div>
                     <div v-if="item.note" class="text-sm text-gray-500 mt-1">
                       Ghi chú: {{ item.note }}
                     </div>
@@ -485,11 +543,11 @@
           <div class="border-t p-4">
             <div class="flex justify-between items-center mb-4">
               <span class="font-svn-avo-bold">Tổng cộng:</span>
-              <span class="text-xl font-bold text-indigo-600">{{ formatPrice(total) }}</span>
+              <span class="text-xl font-bold text-[#018ABE]">{{ formatPrice(total) }}</span>
             </div>
             <button @click="placeOrder" 
                     :disabled="cart.length === 0"
-                    class="w-full bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-indigo-700 transition duration-300">
+                    class="w-full bg-[#018ABE] text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-[#018ABE] transition duration-300">
               Đặt hàng
             </button>
           </div>
@@ -539,7 +597,7 @@
             <div class="p-6 space-y-6">
               <!-- Price -->
               <div class="text-center">
-                <span class="text-2xl font-svn-avo-bold text-indigo-600">
+                <span class="text-2xl font-svn-avo-bold text-[#018ABE]">
                   {{ formatPrice(selectedDish?.price || 0) }}
                 </span>
               </div>
@@ -568,7 +626,7 @@
                   <textarea 
                     v-model="orderNote"
                     rows="2"
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-sm"
+                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#018ABE] focus:border-transparent resize-none text-sm"
                     placeholder="VD: Không hành, ít cay..."
                   ></textarea>
                   <div class="absolute bottom-3 right-3 text-xs text-gray-400">
@@ -580,7 +638,7 @@
               <!-- Total Price -->
               <div class="flex justify-between items-center py-3 border-t border-gray-100">
                 <span class="text-gray-600">Tổng cộng</span>
-                <span class="text-xl font-svn-avo-bold text-indigo-600">
+                <span class="text-xl font-svn-avo-bold text-[#018ABE]">
                   {{ formatPrice((selectedDish?.price || 0) * orderQuantity) }}
                 </span>
               </div>
@@ -592,7 +650,7 @@
                   Hủy
                 </button>
                 <button @click="confirmAddToCart"
-                        class="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors
+                        class="flex-1 px-4 py-3 bg-[#018ABE] text-white rounded-xl hover:bg-[#018ABE] transition-colors
                                flex items-center justify-center gap-2">
                   <i class="fas fa-cart-plus"></i>
                   <span>Thêm vào giỏ</span>
@@ -606,92 +664,6 @@
 
     
 
-    <!-- Thêm vào phần template, sau các modal khác -->
-    <Transition
-      enter-active-class="ease-out duration-300"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="ease-in duration-200"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div v-if="showNewOrderModal" class="fixed inset-0 z-50 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen px-4">
-          <!-- Backdrop with blur -->
-          <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="closeNewOrderModal"></div>
-          
-          <!-- Modal Content -->
-          <div class="relative bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl transform transition-all"
-               data-aos="fade-up" data-aos-duration="1000">
-            <div class="p-8">
-              <h2 class="text-2xl font-svn-avo-bold text-center text-gray-800 mb-6">
-                Tạo đơn hàng mới
-              </h2>
-
-              <form @submit.prevent="handleCreateOrder" class="space-y-6">
-                <!-- Số bàn -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Số bàn
-                  </label>
-                  <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <i class="fas fa-table text-gray-400"></i>
-                    </div>
-                    <input 
-                      v-model="newOrder.tableNumber"
-                      type="number"
-                      required
-                      min="1"
-                      class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Nhập số bàn"
-                    >
-                  </div>
-                </div>
-
-                <!-- Số khách -->
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Số lượng khách
-                  </label>
-                  <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <i class="fas fa-users text-gray-400"></i>
-                    </div>
-                    <input 
-                      v-model="newOrder.guestCount"
-                      type="number"
-                      required
-                      min="1"
-                      class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      placeholder="Nhập số lượng khách"
-                    >
-                  </div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="flex gap-3 pt-4">
-                  <button
-                    type="button"
-                    @click="closeNewOrderModal"
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    type="submit"
-                    class="flex-1 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <i class="fas fa-door-open"></i>
-                    Mở bàn
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 
@@ -1157,7 +1129,7 @@ const handleCreateOrder = () => {
 
 /* Gradient Animations */
 .gradient-text {
-  background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5);
+  background: linear-gradient(90deg, #018ABE, #72a8c5, #52b3d6);
   background-size: 200% auto;
   animation: gradient 3s linear infinite;
   -webkit-background-clip: text;
@@ -1190,12 +1162,12 @@ const handleCreateOrder = () => {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4f46e5;
+  background: #018ABE;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4338ca;
+  background: #018ABE;
 }
 </style>
 
@@ -1205,6 +1177,13 @@ const handleCreateOrder = () => {
 .modal-leave-active {
   transition: all 0.3s ease;
 }
+
+:root {
+  --color-primary: #018ABE;
+  --color-primary-light: #02A1DB;
+  --color-primary-dark: #016D94;
+}
+
 
 .modal-enter-from,
 .modal-leave-to {
@@ -1235,11 +1214,10 @@ textarea::-webkit-scrollbar-thumb:hover {
   background: #ccc;
 }
 
-/* Swiper Navigation Buttons */
 :deep(.swiper-button-next),
 :deep(.swiper-button-prev) {
-  color: theme('colors.indigo.600');
-  background-color: theme('colors.white');
+  color: #0018AB;
+  background-color: white;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1252,11 +1230,11 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 :deep(.swiper-pagination-bullet) {
-  background: theme('colors.indigo.600');
+  background: theme('colors.blue.400');
 }
 
 :deep(.swiper-pagination-bullet-active) {
-  background: theme('colors.indigo.600');
+  background: theme('colors.blue.400');
 }
 
 /* Glass Morphism */
