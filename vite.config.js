@@ -26,7 +26,8 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5173
+    port: 5173,
+    allowedHosts: ['9e26-116-102-180-135.ngrok-free.app', '.ngrok-free.app']
   },
   optimizeDeps: {
     include: ['tsparticles-engine', '@tsparticles/vue3']

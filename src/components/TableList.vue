@@ -1,9 +1,9 @@
 <template>
-  <div class="table-list-container p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
+  <div class="table-list-container p-6 bg-gradient-to-br from-blue-50 via-blue-50 to-[#018ABE]-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
       <!-- Header -->
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 flex items-center">
+        <h1 class="text-3xl text-[#018ABE]  font-bold text-gray-800 flex items-center">
         
           Danh sách bàn
         </h1>
@@ -11,8 +11,8 @@
         <div class="flex space-x-4">
           <!-- Filter dropdown -->
           <div class="relative">
-            <button @click="showFilter = !showFilter" class="flex items-center px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-300">
-              <i class="fas fa-filter text-indigo-600 mr-2"></i>
+            <button @click="showFilter = !showFilter" class="flex text-[#018ABE] items-center px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-all duration-300">
+              <i class="fas fa-filter text-[#018ABE]-600 mr-2"></i>
               <span>Lọc</span>
               <i class="fas fa-chevron-down ml-2 text-gray-500 text-xs"></i>
             </button>
@@ -22,15 +22,15 @@
                 <div class="mb-2 text-sm font-medium text-gray-700">Trạng thái</div>
                 <div class="space-y-2">
                   <label class="flex items-center">
-                    <input type="checkbox" v-model="filters.available" class="form-checkbox h-4 w-4 text-indigo-600">
+                    <input type="checkbox" v-model="filters.available" class="form-checkbox h-4 w-4 text-[#018ABE]-600">
                     <span class="ml-2 text-sm text-gray-700">Trống</span>
                   </label>
                   <label class="flex items-center">
-                    <input type="checkbox" v-model="filters.occupied" class="form-checkbox h-4 w-4 text-indigo-600">
+                    <input type="checkbox" v-model="filters.occupied" class="form-checkbox h-4 w-4 text-[#018ABE]-600">
                     <span class="ml-2 text-sm text-gray-700">Đang sử dụng</span>
                   </label>
                   <label class="flex items-center">
-                    <input type="checkbox" v-model="filters.reserved" class="form-checkbox h-4 w-4 text-indigo-600">
+                    <input type="checkbox" v-model="filters.reserved" class="form-checkbox h-4 w-4 text-[#018ABE]-600">
                     <span class="ml-2 text-sm text-gray-700">Đã đặt trước</span>
                   </label>
                 </div>
@@ -38,23 +38,7 @@
             </div>
           </div>
           
-          <!-- View toggle -->
-          <div class="flex bg-gray-100 rounded-lg p-1">
-            <button 
-              @click="viewMode = 'grid'" 
-              class="px-3 py-1 rounded-md transition-all duration-200"
-              :class="viewMode === 'grid' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
-            >
-              <i class="fas fa-th"></i>
-            </button>
-            <button 
-              @click="viewMode = 'list'" 
-              class="px-3 py-1 rounded-md transition-all duration-200"
-              :class="viewMode === 'list' ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
-            >
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
+          
         </div>
       </div>
       
