@@ -2,7 +2,7 @@
   <div 
     class="table-item relative overflow-hidden rounded-xl transition-all duration-300 transform hover:scale-105"
     :class="[
-      selected ? 'ring-2 ring-offset-2 ring-indigo-500 shadow-lg' : 'shadow',
+      selected ? 'ring-2 ring-offset-2 ring-[#018ABE] shadow-lg' : 'shadow',
       getStatusClass(table.status)
     ]"
   >
@@ -44,7 +44,8 @@
     <!-- Improved quick action overlay with blur effect -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 hover:opacity-100 transition-all duration-300 flex items-center justify-center">
       <button 
-        class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-indigo-600 hover:bg-indigo-50 transition-colors shadow-lg transform hover:scale-105 transition-transform duration-300"
+        @click.stop="handleAction"
+        class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-[#018ABE] transition-colors shadow-lg transform hover:scale-105 transition-transform duration-300"
       >
         <i class="fas mr-2" :class="getActionIcon(table.status)"></i>
         {{ getActionText(table.status) }}
@@ -67,16 +68,25 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   table: {
     type: Object,
     required: true
   },
-  
+  selected: {
+    type: Boolean,
+    default: false
+  }
 });
 
+const emit = defineEmits(['action']);
+
+const handleAction = () => {
+  console.log('TableItem: emitting action event');
+  emit('action', props.table);
+};
 // Methods for table styling
 const getStatusClass = (status) => {
   switch (status) {
@@ -108,6 +118,7 @@ const getStatusText = (status) => {
   }
 };
 
+
 const getStatusTextColor = (status) => {
   switch (status) {
     case 'available':
@@ -120,7 +131,7 @@ const getStatusTextColor = (status) => {
 const getActionText = (status) => {
   switch (status) {
     case 'available':
-      return 'Đặt bàn';
+      return 'Chọn bàn';
     case 'occupied':
       return 'Xem chi tiết';
   }
@@ -180,7 +191,7 @@ const getChairPositions = (capacity) => {
 }
 
 .table-number {
-  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  background: linear-gradient(to right,#018ABE, #018ABE);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);

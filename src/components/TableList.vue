@@ -65,20 +65,28 @@
               <i class="fas fa-crown text-amber-500 mr-2"></i> Khu vực VIP
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <div v-for="table in vipTables" :key="table.id" @click="selectTable(table)" class="cursor-pointer">
-                <TableItem :table="table" :selected="selectedTable?.id === table.id" />
+              <div v-for="table in vipTables" :key="table.id" class="cursor-pointer">
+                <TableItem 
+                  :table="table" 
+                  :selected="selectedTable?.id === table.id"
+                  @action="handleTableAction" 
+                />
               </div>
             </div>
           </div>
           
           <!-- Regular Section -->
           <div class="section-container w-full lg:w-[calc(50%-1rem)] border border-dashed border-blue-300 rounded-xl p-4 bg-blue-50/50">
-            <h3 class="text-lg font-semibold text-blue-800 mb-4 flex items-center">
-              <i class="fas fa-users text-blue-500 mr-2"></i> Khu vực thường
+            <h3 class="text-lg font-semibold text-[#018ABE] mb-4 flex items-center">
+              <i class="fas fa-users text-[#018ABE] mr-2"></i> Khu vực thường
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <div v-for="table in regularTables" :key="table.id" @click="selectTable(table)" class="cursor-pointer">
-                <TableItem :table="table" :selected="selectedTable?.id === table.id" />
+              <div v-for="table in regularTables" :key="table.id" class="cursor-pointer">
+                <TableItem 
+                  :table="table" 
+                  :selected="selectedTable?.id === table.id"
+                  @action="handleTableAction"
+                />
               </div>
             </div>
           </div>
@@ -89,137 +97,81 @@
               <i class="fas fa-tree text-green-500 mr-2"></i> Khu vực ngoài trời
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              <div v-for="table in outdoorTables" :key="table.id" @click="selectTable(table)" class="cursor-pointer">
-                <TableItem :table="table" :selected="selectedTable?.id === table.id" />
+              <div v-for="table in outdoorTables" :key="table.id" class="cursor-pointer">
+                <TableItem 
+                  :table="table" 
+                  :selected="selectedTable?.id === table.id"
+                  @action="handleTableAction"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Selected table details -->
-      <div v-if="selectedTable" class="bg-white rounded-2xl shadow-lg p-6 transform transition-all duration-500 animate-fadeIn">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-2xl font-bold text-gray-800">Bàn #{{ selectedTable.number }}</h3>
-            <p class="text-gray-600 mt-1">{{ selectedTable.section }} • {{ selectedTable.capacity }} người</p>
-            
-            <div class="mt-4 flex items-center">
-              <div class="w-3 h-3 rounded-full mr-2" :class="getStatusColor(selectedTable.status)"></div>
-              <span class="font-medium" :class="getStatusTextColor(selectedTable.status)">
-                {{ getStatusText(selectedTable.status) }}
-              </span>
-            </div>
-          </div>
-          
-          <div class="flex space-x-2">
-            <button 
-              v-if="selectedTable.status === 'available'"
-              @click="confirmTableSelection"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 flex items-center"
-            >
-              <i class="fas fa-check-circle mr-2"></i>
-              Chọn bàn này
-            </button>
-            
-            <button 
-              v-if="selectedTable.status === 'available'"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300 flex items-center"
-            >
-              <i class="fas fa-utensils mr-2"></i>
-              Đặt bàn
-            </button>
-            
-            <button 
-              v-if="selectedTable.status === 'occupied'"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 flex items-center"
-            >
-              <i class="fas fa-receipt mr-2"></i>
-              Thanh toán
-            </button>
-            
-           
-          </div>
-        </div>
-        
-        <div v-if="selectedTable.status === 'occupied'" class="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h4 class="font-medium text-gray-700 mb-2">Thông tin đơn hàng</h4>
-          <div class="flex justify-between text-sm text-gray-600 mb-1">
-            <span>Thời gian bắt đầu:</span>
-            <span>{{ selectedTable.orderInfo?.startTime }}</span>
-          </div>
-          <div class="flex justify-between text-sm text-gray-600 mb-1">
-            <span>Số món:</span>
-            <span>{{ selectedTable.orderInfo?.itemCount }} món</span>
-          </div>
-          <div class="flex justify-between text-sm font-medium text-gray-800">
-            <span>Tổng tiền:</span>
-            <span>{{ formatCurrency(selectedTable.orderInfo?.totalAmount) }}</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+  
+  
+  
+  <!-- Import the TableConfirmationModal component -->
+  <TableConfirmationModal
+    v-model:show="showConfirmationModal"
+    :table="selectedTable"
+    @confirm="handleConfirmation"
+    @cancel="showConfirmationModal = false"
+  />
 </template>
 
 <script setup>
 import { ref, computed, onMounted, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
 import TableItem from './TableItem.vue';
-import axios from 'axios';
+import TableConfirmationModal from './TableConfirmationModal.vue';
+import tableService from '../api/tableService';
 
-// Define emits
+const router = useRouter();
 const emit = defineEmits(['select-table']);
 
 // State
 const tables = ref([]);
 const selectedTable = ref(null);
 const showFilter = ref(false);
-const viewMode = ref('grid');
+const showConfirmationModal = ref(false);
+const tableNote = ref('');
 const filters = ref({
   available: true,
   occupied: true
 });
 
-// Update Fetch tables data
+// Reservation modal state
+const showReservationModal = ref(false);
+const reservationData = ref({
+  guestCount: 1,
+  notes: ''
+});
+
+// In TableList.vue
+const handleTableAction = (table) => {
+  console.log('TableList: received action event', table);
+  selectedTable.value = table;
+  if (table.status === 'available') {
+    console.log('Showing confirmation modal');
+    showConfirmationModal.value = true;
+  }
+};
+
+// Fetch tables data
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost/domain2/tables');
-    const apiTables = response.data.map(table => ({
-      id: table.id,
-      number: table.tableNumber,
-      section: getTableSection(table.tableNumber),
-      capacity: table.capacity,
-      status: table.status.toLowerCase(),
-      type: getTableType(table.tableNumber),
-      orderInfo: table.status === 'OCCUPIED' ? {
-        startTime: '19:30',
-        itemCount: 0,
-        totalAmount: 0
-      } : null
-    }));
-    
-    tables.value = apiTables;
+    tables.value = await tableService.getAllTables();
   } catch (error) {
     console.error('Error fetching tables:', error);
   }
 });
 
-// Add new helper functions
-const getTableType = (tableNumber) => {
-  if (tableNumber.startsWith('VIP')) return 'vip';
-  if (tableNumber.startsWith('REG')) return 'regular';
-  if (tableNumber.startsWith('OUT')) return 'outdoor';
-  return 'regular'; // default type
-};
-
-const getTableSection = (tableNumber) => {
-  if (tableNumber.startsWith('VIP')) return 'Khu vực VIP';
-  if (tableNumber.startsWith('REG')) return 'Khu vực thường';
-  if (tableNumber.startsWith('OUT')) return 'Khu vực ngoài trời';
-  return 'Khu vực thường'; // default section
-};
-
-// Remove the generateMockTables function as it's no longer needed
+// Remove the helper functions as they're now in the service
+// const getTableType and getTableSection are now in tableService
 
 // Generate mock data
 const generateMockTables = () => {
@@ -315,10 +267,48 @@ const selectTable = (table) => {
   }
 };
 
+// Open reservation modal
+const openReservationModal = () => {
+  showReservationModal.value = true;
+};
+
+// Close reservation modal
+const closeReservationModal = () => {
+  showReservationModal.value = false;
+};
+
+// Confirm reservation
+const confirmReservation = async () => {
+  try {
+    if (selectedTable.value) {
+      await tableService.reserveTable(selectedTable.value.id, reservationData.value);
+      // Update the table status after successful reservation
+      selectedTable.value.status = 'occupied';
+      closeReservationModal();
+      // Emit event for parent component
+      emit('reserve-table', selectedTable.value);
+    }
+  } catch (error) {
+    console.error('Error confirming reservation:', error);
+  }
+};
+
 // Thêm phương thức xác nhận chọn bàn
 const confirmTableSelection = () => {
   if (selectedTable.value) {
+    // Save table info to localStorage
+    localStorage.setItem('selectedTable', JSON.stringify(selectedTable.value));
+    localStorage.setItem('currentTableNumber', selectedTable.value.number);
+    localStorage.setItem('tableNote', tableNote.value);
+    
+    // Emit event if needed
     emit('select-table', selectedTable.value);
+    
+    // Navigate to Home
+    router.push('/');
+    
+    // Close modal
+    showConfirmationModal.value = false;
   }
 };
 
