@@ -57,11 +57,7 @@
       class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent animate-pulse-slow"
     ></div>
     
-    <!-- Enhanced animation effect for reserved tables -->
-    <div 
-      v-if="table.status === 'reserved'"
-      class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-transparent animate-pulse-slow"
-    ></div>
+  
     
     <!-- Decorative elements -->
     <div v-if="table.type === 'vip'" class="absolute top-1 left-1">
@@ -78,10 +74,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  selected: {
-    type: Boolean,
-    default: false
-  }
+  
 });
 
 // Methods for table styling
@@ -91,10 +84,8 @@ const getStatusClass = (status) => {
       return 'bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200';
     case 'occupied':
       return 'bg-gradient-to-br from-red-50 to-rose-50 border border-red-200';
-    case 'reserved':
-      return 'bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200';
-    default:
-      return 'bg-white border border-gray-200';
+
+  
   }
 };
 
@@ -104,10 +95,7 @@ const getStatusIndicatorClass = (status) => {
       return 'bg-green-500 animate-pulse';
     case 'occupied':
       return 'bg-red-500';
-    case 'reserved':
-      return 'bg-yellow-500 animate-pulse';
-    default:
-      return 'hidden'; // Thêm case mặc định để ẩn indicator
+
   }
 };
 
@@ -117,10 +105,6 @@ const getStatusText = (status) => {
       return 'Trống';
     case 'occupied':
       return 'Đang sử dụng';
-    case 'reserved':
-      return 'Đã đặt trước';
-    default:
-      return 'Không xác định';
   }
 };
 
@@ -130,10 +114,6 @@ const getStatusTextColor = (status) => {
       return 'text-green-600 font-medium';
     case 'occupied':
       return 'text-red-600 font-medium';
-    case 'reserved':
-      return 'text-yellow-600 font-medium';
-    default:
-      return 'text-gray-600';
   }
 };
 
@@ -143,10 +123,6 @@ const getActionText = (status) => {
       return 'Đặt bàn';
     case 'occupied':
       return 'Xem chi tiết';
-    case 'reserved':
-      return 'Xác nhận';
-    default:
-      return 'Chọn';
   }
 };
 
@@ -156,10 +132,7 @@ const getActionIcon = (status) => {
       return 'fa-utensils';
     case 'occupied':
       return 'fa-info-circle';
-    case 'reserved':
-      return 'fa-check-circle';
-    default:
-      return 'fa-hand-pointer';
+
   }
 };
 

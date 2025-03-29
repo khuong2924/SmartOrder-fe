@@ -29,10 +29,7 @@
                     <input type="checkbox" v-model="filters.occupied" class="form-checkbox h-4 w-4 text-[#018ABE]-600">
                     <span class="ml-2 text-sm text-gray-700">Đang sử dụng</span>
                   </label>
-                  <label class="flex items-center">
-                    <input type="checkbox" v-model="filters.reserved" class="form-checkbox h-4 w-4 text-[#018ABE]-600">
-                    <span class="ml-2 text-sm text-gray-700">Đã đặt trước</span>
-                  </label>
+ 
                 </div>
               </div>
             </div>
@@ -52,10 +49,7 @@
           <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
           <span class="text-sm text-gray-600">Đang sử dụng</span>
         </div>
-        <div class="flex items-center">
-          <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-          <span class="text-sm text-gray-600">Đã đặt trước</span>
-        </div>
+        
       </div>
       
       <!-- Restaurant layout visualization -->
@@ -144,13 +138,7 @@
               Thanh toán
             </button>
             
-            <button 
-              v-if="selectedTable.status === 'reserved'"
-              class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors duration-300 flex items-center"
-            >
-              <i class="fas fa-check-circle mr-2"></i>
-              Xác nhận
-            </button>
+           
           </div>
         </div>
         
@@ -188,8 +176,7 @@ const showFilter = ref(false);
 const viewMode = ref('grid');
 const filters = ref({
   available: true,
-  occupied: true,
-  reserved: true
+  occupied: true
 });
 
 // Fetch tables data
@@ -211,7 +198,7 @@ onMounted(async () => {
 
 // Generate mock data
 const generateMockTables = () => {
-  const statuses = ['available', 'occupied', 'reserved'];
+  const statuses = ['available', 'occupied'];
   const mockTables = [];
   
   // VIP tables
@@ -234,7 +221,7 @@ const generateMockTables = () => {
   
   // Regular tables
   for (let i = 1; i <= 12; i++) {
-    const status = statuses[Math.floor(Math.random() * 3)];
+    const status = statuses[Math.floor(Math.random() * 2)];
     mockTables.push({
       id: `regular-${i}`,
       number: `${i}`,
@@ -276,7 +263,7 @@ const filteredTables = computed(() => {
   return tables.value.filter(table => {
     if (table.status === 'available' && !filters.value.available) return false;
     if (table.status === 'occupied' && !filters.value.occupied) return false;
-    if (table.status === 'reserved' && !filters.value.reserved) return false;
+
     return true;
   });
 });
@@ -319,10 +306,6 @@ const getStatusText = (status) => {
             return 'Trống';
           case 'occupied':
             return 'Đang sử dụng';
-          case 'reserved':
-            return 'Đã đặt trước';
-          default:
-            return 'Không xác định';
         }
       };
       
@@ -332,10 +315,6 @@ const getStatusText = (status) => {
             return 'bg-green-500';
           case 'occupied':
             return 'bg-red-500';
-          case 'reserved':
-            return 'bg-yellow-500';
-          default:
-            return 'bg-gray-500';
         }
       };
       
@@ -345,10 +324,6 @@ const getStatusText = (status) => {
             return 'text-green-600';
           case 'occupied':
             return 'text-red-600';
-          case 'reserved':
-            return 'text-yellow-600';
-          default:
-            return 'text-gray-600';
         }
       };
       
