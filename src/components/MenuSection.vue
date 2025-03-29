@@ -30,7 +30,7 @@
                         'fas fa-leaf': category === 'Khai vị',
                         'fas fa-ice-cream': category === 'Tráng miệng'
                       }, 
-                      selectedCategory === category ? 'text-white' : 'text-blue-500',
+                      selectedCategory === category ? 'text-white' : 'text-[#018ABE]',
                       'text-sm'
                     ]"></i>
                 </span>

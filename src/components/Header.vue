@@ -2,13 +2,19 @@
   <header 
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
     :class="{
-      'bg-primary/95 shadow-lg': scrolled,
+      'bg-primary/95 shadow-lg': scrolled && !overWhiteSection,
+      'bg-white/95 shadow-lg': scrolled && overWhiteSection,
       'bg-transparent': !scrolled
     }"
   >
-    <div class="absolute inset-0 overflow-hidden" v-if="scrolled">
+    <div class="absolute inset-0 overflow-hidden" v-if="scrolled && !overWhiteSection">
       <div class="absolute inset-0 bg-primary/90 backdrop-blur-md"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-primary/95 to-primary-dark/90"></div>
+    </div>
+    
+    <div class="absolute inset-0 overflow-hidden" v-if="scrolled && overWhiteSection">
+      <div class="absolute inset-0 bg-white/90 backdrop-blur-md"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-white/95 to-gray-100/90"></div>
     </div>
     
     <nav class="container mx-auto px-6 py-3 relative">
@@ -16,7 +22,8 @@
         <!-- Logo -->
         <a href="#" class="flex text-[#018ABE] items-center space-x-3 group">
           <div class="flex flex-col">
-            <span class="text-3xl font-bold tracking-wider text-white">
+            <span class="text-3xl font-bold tracking-wider" 
+                  :class="{'text-white': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}">
               Smart Order
             </span>
           </div>
@@ -29,10 +36,13 @@
             v-for="item in menuItems" 
             :key="item.href" 
             :href="item.href"
-            class="relative py-2 px-1 text-white/90 hover:text-[#018ABE] transition-colors duration-300 group"
+            class="relative py-2 px-1 transition-colors duration-300 group"
+            :class="{'text-white/90 hover:text-[#018ABE]': !overWhiteSection, 
+                     'text-gray-700 hover:text-[#018ABE]': overWhiteSection}"
           >
             <span class="relative z-10">{{ item.text }}</span>
-            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-white/80 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
+            <span class="absolute bottom-0 left-0 w-full h-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"
+                  :class="{'bg-white/80': !overWhiteSection, 'bg-[#018ABE]': overWhiteSection}"></span>
           </a>
         </div>
 
@@ -41,10 +51,12 @@
           <!-- Table Number Badge -->
           <div 
             v-if="currentTableNumber" 
-            class="bg-white/15 backdrop-blur-md px-4 py-2 rounded-full flex items-center shadow-lg"
+            class="backdrop-blur-md px-4 py-2 rounded-full flex items-center shadow-lg"
+            :class="{'bg-white/15': !overWhiteSection, 'bg-[#018ABE]/15': overWhiteSection}"
           >
-            <i class="fas fa-table text-white/90 mr-2"></i>
-            <span class="text-white font-medium">
+            <i class="fas fa-table mr-2" 
+               :class="{'text-white/90': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}"></i>
+            <span :class="{'text-white': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}" class="font-medium">
               Bàn {{ currentTableNumber }}
             </span>
           </div>
@@ -52,21 +64,27 @@
           <!-- Auth Button -->
           <button 
             @click="logout"
-            class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/10 hover:bg-white/20 group"
+            class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 group"
+            :class="{'bg-white/10 hover:bg-white/20': !overWhiteSection, 
+                     'bg-[#018ABE]/10 hover:bg-[#018ABE]/20': overWhiteSection}"
           >
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary-light to-primary flex items-center justify-center">
               <i class="fas fa-sign-out-alt text-white"></i>
             </div>
-            <span class="text-white/90 group-hover:text-white">Đăng xuất</span>
+            <span :class="{'text-white/90 group-hover:text-white': !overWhiteSection, 
+                         'text-[#018ABE]/90 group-hover:text-[#018ABE]': overWhiteSection}">Đăng xuất</span>
           </button>
 
           <!-- Cart Button -->
           <button 
             @click="toggleCart"
-            class="relative group p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
+            class="relative group p-2 rounded-full transition-all duration-300"
+            :class="{'bg-white/10 hover:bg-white/20': !overWhiteSection, 
+                     'bg-[#018ABE]/10 hover:bg-[#018ABE]/20': overWhiteSection}"
           >
             <svg 
-              class="w-6 h-6 text-white"
+              class="w-6 h-6"
+              :class="{'text-white': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}"
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -89,10 +107,13 @@
           <!-- Mobile Menu Button -->
           <button 
             @click="toggleMobileMenu"
-            class="md:hidden p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300"
+            class="md:hidden p-2 rounded-full transition-all duration-300"
+            :class="{'bg-white/10 hover:bg-white/20': !overWhiteSection, 
+                     'bg-[#018ABE]/10 hover:bg-[#018ABE]/20': overWhiteSection}"
           >
             <svg 
-              class="w-6 h-6 text-white"
+              class="w-6 h-6"
+              :class="{'text-white': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}"
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -133,9 +154,9 @@
           </a>
           <button 
             @click="logout"
-            class="w-full flex items-center space-x-2 p-4 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20"
+            class="w-full text-[#018ABE] flex items-center space-x-2 p-4 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20"
           >
-            <i class="fas fa-sign-out-alt text-white/90"></i>
+            <i class="fas fa-sign-out-alt text-[#018ABE]"></i>
             <span class="text-white/90">Đăng xuất</span>
           </button>
         </div>
@@ -203,6 +224,7 @@ const emit = defineEmits(['logout', 'toggle-cart']);
 
 // State
 const scrolled = ref(false);
+const overWhiteSection = ref(false); // New state to track when we're over white sections
 const isMobileMenuOpen = ref(false);
 const authStore = useAuthStore();
 
@@ -221,9 +243,25 @@ const toggleCart = () => {
 
 // Lifecycle
 onMounted(() => {
-  window.addEventListener('scroll', () => {
+  const checkScrollPosition = () => {
     scrolled.value = window.pageYOffset > 20;
-  });
+    
+    // Check if we've scrolled to the FeaturedDishes section or any other white background section
+    const featuredSection = document.querySelector('#featured-dishes'); // Điều chỉnh selector này nếu cần
+    
+    if (featuredSection) {
+      const featuredRect = featuredSection.getBoundingClientRect();
+      const headerHeight = 80; // Ước tính chiều cao của header, điều chỉnh nếu cần
+      
+      // Nếu phần trên cùng của #featured-dishes đã nằm dưới header
+      overWhiteSection.value = featuredRect.top <= headerHeight;
+    }
+  };
+
+  window.addEventListener('scroll', checkScrollPosition);
+  
+  // Initial check
+  checkScrollPosition();
 
   // Close mobile menu on outside click
   document.addEventListener('click', (e) => {

@@ -310,7 +310,7 @@ const orderQuantity = ref(1)
 // Menu items
 const menuItems = [
   { href: '#hero', text: 'Trang chủ' },
-  { href: '#featured', text: 'Món Nổi bật' },
+  { href: '#featured-dishes', text: 'Món Nổi bật' },
   { href: '#menu', text: 'Thực đơn' },
 
 ]
