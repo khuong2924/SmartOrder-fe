@@ -165,6 +165,7 @@
 <script setup>
 import { ref, computed, onMounted, defineEmits } from 'vue';
 import TableItem from './TableItem.vue';
+import axios from 'axios';
 
 // Define emits
 const emit = defineEmits(['select-table']);
@@ -179,22 +180,46 @@ const filters = ref({
   occupied: true
 });
 
-// Fetch tables data
+// Update Fetch tables data
 onMounted(async () => {
   try {
-    // Simulate API call
-    // In a real app, you would fetch from your backend
-    // const response = await axios.get('http://localhost:8081/api/tables');
-    // tables.value = response.data;
+    const response = await axios.get('http://localhost/domain2/tables');
+    const apiTables = response.data.map(table => ({
+      id: table.id,
+      number: table.tableNumber,
+      section: getTableSection(table.tableNumber),
+      capacity: table.capacity,
+      status: table.status.toLowerCase(),
+      type: getTableType(table.tableNumber),
+      orderInfo: table.status === 'OCCUPIED' ? {
+        startTime: '19:30',
+        itemCount: 0,
+        totalAmount: 0
+      } : null
+    }));
     
-    // Mock data for demonstration
-    setTimeout(() => {
-      tables.value = generateMockTables();
-    }, 500);
+    tables.value = apiTables;
   } catch (error) {
     console.error('Error fetching tables:', error);
   }
 });
+
+// Add new helper functions
+const getTableType = (tableNumber) => {
+  if (tableNumber.startsWith('VIP')) return 'vip';
+  if (tableNumber.startsWith('REG')) return 'regular';
+  if (tableNumber.startsWith('OUT')) return 'outdoor';
+  return 'regular'; // default type
+};
+
+const getTableSection = (tableNumber) => {
+  if (tableNumber.startsWith('VIP')) return 'Khu vực VIP';
+  if (tableNumber.startsWith('REG')) return 'Khu vực thường';
+  if (tableNumber.startsWith('OUT')) return 'Khu vực ngoài trời';
+  return 'Khu vực thường'; // default section
+};
+
+// Remove the generateMockTables function as it's no longer needed
 
 // Generate mock data
 const generateMockTables = () => {
