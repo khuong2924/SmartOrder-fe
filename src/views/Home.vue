@@ -42,239 +42,22 @@
       </div>
     </Transition>
 
-        <!-- Hero Section -->
-        <section id="hero" class="hero-image h-screen flex items-center justify-center text-white relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
-          <div id="tsparticles" class="absolute inset-0"></div>
-          
-          <!-- Enhanced Hero Content -->
-          <div class="relative z-10 text-center max-w-4xl px-6">
-            <!-- Decorative elements -->
-            <div class="absolute -top-20 -left-20 w-40 h-40 bg-[#018ABE]-500/20 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-[#018ABE]-300-20 rounded-full blur-3xl animate-pulse"></div>
-            
-            <!-- Restaurant logo icon with animation -->
-            <div class="inline-block mb-6 p-4 rounded-full bg-white/10 backdrop-blur-md animate__animated animate__fadeInDown">
-              <i class="fas fa-utensils text-4xl text-white"></i>
-            </div>
-            
-            <!-- Main heading with enhanced styling -->
-            <h1 class="text-6xl mb-6 md:text-7xl font-svn-avo-bold animate__animated animate__fadeInDown 
-                       bg-gradient-to-r from-white via-[#018ABE]-200 to-[#018ABE] bg-clip-text text-transparent
-                       drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] tracking-tight">
-              Nhà hàng Ngon
-            </h1>
-            
-            <!-- Tagline with decorative elements -->
-            <div class="relative mb-10">
-              <div class="h-px w-20 bg-gradient-to-r from-transparent via-white/60 to-transparent absolute -left-24 top-1/2 hidden md:block"></div>
-              <p class="text-xl md:text-2xl animate__animated animate__fadeInUp animate__delay-1s
-                        font-light tracking-wide">
-                Hương vị truyền thống - Không gian hiện đại
-              </p>
-              <div class="h-px w-20 bg-gradient-to-r from-transparent via-white/60 to-transparent absolute -right-24 top-1/2 hidden md:block"></div>
-            </div>
-            
-            <!-- Call to action buttons with enhanced styling -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center animate__animated animate__fadeInUp animate__delay-2s">
-              <a href="#menu" 
-                 class="px-8 py-4 rounded-full bg-[#018ABE] text-white 
-                        hover:from-i[#018ABE] hover:to-[#018ABE]-700 transform hover:scale-105 transition-all duration-300
-                        shadow-[#018ABE] flex items-center justify-center gap-2">
-                <i class="fas fa-utensils"></i>
-                Xem Thực đơn
-              </a>
-              <a href="#featured" 
-                 class="px-8 py-4 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20
-                        hover:bg-white/20 transform hover:scale-105 transition-all duration-300
-                        flex items-center justify-center gap-2">
-                <i class="fas fa-star"></i>
-                Món nổi bật
-              </a>
-            </div>
-            
-            <!-- Scroll indicator -->
-            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
-              <a href="#featured" class="text-white/70 hover:text-white transition-colors">
-                <i class="fas fa-chevron-down"></i>
-              </a>
-            </div>
-          </div>
-        </section>
+    <!-- Hero Section -->
+    <HeroSection />
 
     <!-- Featured Dishes Section -->
-    <section id="featured" class="py-20 bg-white">
-      <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-svn-avo-bold text-center mb-12" data-aos="fade-up">Món nổi bật</h2>
-        <div class="swiper-container" data-aos="fade-up" data-aos-delay="200">
-          <div class="swiper-wrapper">
-            <div v-for="dish in featuredDishes" 
-                 :key="dish.id" 
-                 class="swiper-slide p-4">
-              <div class="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl 
-                          transform hover:-translate-y-2 transition-all duration-500">
-                <!-- Image Container -->
-                <div class="relative h-72 overflow-hidden">
-                  <img :src="dish.image" 
-                       :alt="dish.name" 
-                       class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                  
-                  <!-- Featured Badge -->
-                  <div class="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 
-                              text-white px-4 py-1 rounded-full text-sm font-medium shadow-lg">
-                    Nổi bật
-                  </div>
-                  
-                  <!-- Price Badge -->
-                  <div class="absolute top-4 right-4 bg-white/95 text-[#018ABE] px-4 py-2 
-                              rounded-full font-bold shadow-lg backdrop-blur-sm">
-                    {{ formatPrice(dish.price) }}
-                  </div>
-                  
-                  <!-- Gradient Overlay -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                  
-                  <!-- Bottom Content -->
-                  <div class="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 class="text-2xl font-svn-avo-bold text-white mb-2">{{ dish.name }}</h3>
-                    <p class="text-white/90 text-sm mb-4 line-clamp-2">{{ dish.description }}</p>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex gap-3">
-                      <button @click="openAddToCartModal(dish)"
-                              class="flex-1 bg-white/90 text-[#018ABE] px-6 py-3 rounded-xl 
-                                     hover:bg-[#018ABE] hover:text-white transition-all duration-300
-                                     transform hover:scale-105 flex items-center justify-center gap-2">
-                        <i class="fas fa-cart-plus"></i>
-                        Thêm vào giỏ
-                      </button>
-                      <button class="w-12 h-12 bg-white/20 text-white rounded-xl hover:bg-white/30
-                                     flex items-center justify-center backdrop-blur-sm">
-                        <i class="fas fa-heart"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Additional Info -->
-                <div class="p-6 bg-white">
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                      <div class="flex items-center gap-1">
-                        <i class="fas fa-star text-yellow-400"></i>
-                        <span class="font-medium">4.8</span>
-                      </div>
-                      <span class="text-gray-300">|</span>
-                      <div class="flex items-center gap-1 text-gray-600">
-                        <i class="fas fa-clock"></i>
-                        <span>15-20 phút</span>
-                      </div>
-                    </div>
-                    <div class="flex gap-2">
-                      <span v-if="dish.spicy" 
-                            class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-medium">
-                        <i class="fas fa-pepper-hot"></i>
-                      </span>
-                      <span v-if="dish.vegetarian" 
-                            class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
-                        <i class="fas fa-leaf"></i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Swiper Navigation -->
-          <div class="swiper-button-next after:text-[#018ABE]"></div>
-          <div class="swiper-button-prev after:text-[#018ABE]"></div>
-          <!-- Swiper Pagination -->
-          <div class="swiper-pagination"></div>
-        </div>
-      </div>
-    </section>
+    <FeaturedDishes 
+      :featured-dishes="featuredDishes" 
+      @open-add-to-cart-modal="openAddToCartModal" 
+    />
 
-    <!-- Menu Section -->
-    <section id="menu" class="py-20 bg-gray-100">
-      <div class="container mx-auto px-4">
-        <h2 class="text-5xl text-[#018ABE] font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
-        <!-- Menu Categories -->
-          <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
-            <div class="relative max-w-4xl mx-auto">
-              <!-- Decorative background elements -->
-              <div class="absolute inset-0 rounded-2xl transform -rotate-1"></div>
-              <div class="absolute -left-4 -right-4 -top-4 -bottom-4  rounded-3xl transform rotate-1 blur-lg"></div>
-              
-              <!-- Interactive categories container -->
-              <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
-                <button v-for="category in categories" 
-                        :key="category"
-                        @click="selectedCategory = category"
-                        class="group relative px-8 py-3.5 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-110 shadow-sm"
-                        :class="{
-                          'bg-[#018ABE] text-white shadow-md': selectedCategory === category,
-                          'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
-                        }">
-                  
-                  <!-- Category icon with animation -->
-                  <span class="absolute text-[#018ABE] left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:scale-125">
-                    <i :class="[
-                        {
-                          'fas fa-utensils': category === 'Món chính',
-                          'fas fa-coffee': category === 'Đồ uống',
-                          'fas fa-leaf': category === 'Khai vị',
-                          'fas fa-ice-cream': category === 'Tráng miệng'
-                        }, 
-                        selectedCategory === category ? 'text-white' : 'text-blue-500',
-                        'text-sm'
-                      ]"></i>
-                  </span>
-                  
-                  <!-- Category name with transition effects -->
-                  <span class="font-svn-avo-bold transition-all duration-300 relative">
-                    {{ category }}
-                    <!-- Underline animation for selected category -->
-                    <span v-if="selectedCategory === category" 
-                          class="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/70 transform origin-left scale-x-100 transition-transform"></span>
-                  </span>
-                  
-                  <!-- Decorative particles for selected category -->
-                  <span v-if="selectedCategory === category" 
-                        class="absolute -right-1 -top-1 w-3 h-3 bg-white rounded-full opacity-70 animate-ping"></span>
-                        
-                  <!-- Active indicator with pulse animation -->
-                  <span v-if="selectedCategory === category" 
-                        class="absolute -bottom-1 left-1/2 w-12 h-1 bg-white rounded-full transform -translate-x-1/2
-                              shadow-lg animate-pulse"></span>
-                              
-                  <!-- Badge counter (optional - you can add dish counts per category) -->
-                  <span v-if="selectedCategory === category" 
-                        class="absolute -top-2 -right-2 bg-white text-[#018ABE] text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">
-                    {{ filteredDishes.length }}
-                  </span>
-                </button>
-              </div>
-              
-              <!-- Enhanced scroll indicators with gradients (only on mobile) -->
-              <div class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent md:hidden pointer-events-none"></div>
-              <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent md:hidden pointer-events-none"></div>
-              
-              <!-- Optional: Animation hint for mobile users -->
-              <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 md:hidden">
-                <span class="text-xs text-gray-400 flex items-center gap-1">
-                  <i class="fas fa-arrows-left-right text-gray-300 animate-pulse"></i>
-                  Vuốt để xem thêm
-                </span>
-              </div>
-            </div>
-          </div>
-        <MenuItems 
-          :dishes="filteredDishes" 
-          @open-add-to-cart-modal="openAddToCartModal" 
-        />
-      </div>
-    </section>
-
+    <!-- Menu Section - Now using component -->
+    <MenuSection
+      :categories="categories"
+      v-model:selectedCategory="selectedCategory"
+      :dishes="dishes"
+      @open-add-to-cart-modal="openAddToCartModal"
+    />
 
     <!-- Cart Sidebar -->
     <Transition
@@ -462,8 +245,10 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import { useAuthStore } from '@/store/auth';
-import MenuItems from '@/components/MenuItems.vue';
 import Header from '@/components/Header.vue'; 
+import HeroSection from '@/components/HeroSection.vue';
+import FeaturedDishes from '@/components/FeaturedDishes.vue';
+import MenuSection from '@/components/MenuSection.vue';
 
 // Auth State
 const isAuthMenuOpen = ref(false)
