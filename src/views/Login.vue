@@ -174,10 +174,18 @@ const validateLoginForm = () => {
 const handleLogin = async () => {
   if (validateLoginForm()) {
     try {
-      const data = await authService.login(
+      const response = await authService.login(
         loginForm.value.username,
         loginForm.value.password
       )
+      
+      // Save token and user data to localStorage
+      localStorage.setItem('token', response.token)
+      localStorage.setItem('tokenType', response.type)
+      localStorage.setItem('userId', response.id)
+      localStorage.setItem('username', response.username)
+      localStorage.setItem('email', response.email)
+      localStorage.setItem('roles', JSON.stringify(response.roles))
       
       if (authService.isKitchen()) {
         await router.push('/kitchen')

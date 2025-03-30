@@ -3,23 +3,29 @@
       <div class="container mx-auto px-4">
         <h2 class="text-5xl text-[#018ABE] font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
         
-        <!-- Menu Categories -->
-        <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
-          <div class="relative max-w-4xl mx-auto">
-            <!-- Decorative background elements -->
-            <div class="absolute inset-0 rounded-2xl transform -rotate-1"></div>
-            <div class="absolute -left-4 -right-4 -top-4 -bottom-4 rounded-3xl transform rotate-1 blur-lg"></div>
-            
-            <!-- Interactive categories container -->
-            <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
-              <button v-for="category in categories" 
-                      :key="category"
-                      @click="selectCategory(category)"
-                      class="group relative px-8 py-3.5 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-110 shadow-sm"
-                      :class="{
-                        'bg-[#018ABE] text-white shadow-md': selectedCategory === category,
-                        'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
-                      }">
+        <!-- Loading indicator -->
+        <div v-if="isLoading" class="flex justify-center items-center py-20">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#018ABE]"></div>
+        </div>
+        
+        <div v-else>
+          <!-- Menu Categories -->
+          <div class="mb-12" data-aos="fade-up" data-aos-delay="200">
+            <div class="relative max-w-4xl mx-auto">
+              <!-- Decorative background elements -->
+              <div class="absolute inset-0 rounded-2xl transform -rotate-1"></div>
+              <div class="absolute -left-4 -right-4 -top-4 -bottom-4 rounded-3xl transform rotate-1 blur-lg"></div>
+              
+              <!-- Interactive categories container -->
+              <div class="relative flex flex-nowrap overflow-x-auto py-6 px-4 md:px-8 md:flex-wrap md:justify-center md:overflow-x-visible scrollbar-hide">
+                <button v-for="category in categories" 
+                        :key="category"
+                        @click="selectCategory(category)"
+                        class="group relative px-8 py-3.5 mx-2 mb-2 rounded-xl transition-all duration-300 transform hover:scale-110 shadow-sm"
+                        :class="{
+                          'bg-[#018ABE] text-white shadow-md': selectedCategory === category,
+                          'bg-white hover:bg-gray-50 text-gray-700': selectedCategory !== category
+                        }">
                 
                 <!-- Category icon with animation -->
                 <span class="absolute text-[#018ABE] left-3 top-1/2 -translate-y-1/2 transition-all duration-300 group-hover:scale-125">
@@ -79,6 +85,7 @@
           :dishes="filteredDishes" 
           @open-add-to-cart-modal="openAddToCartModal" 
         />
+        </div>
       </div>
     </section>
   </template>
@@ -100,6 +107,10 @@
     dishes: {
       type: Array,
       required: true
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   });
   

@@ -56,6 +56,7 @@
       :categories="categories"
       v-model:selectedCategory="selectedCategory"
       :dishes="dishes"
+      :is-loading="isLoading"
       @open-add-to-cart-modal="openAddToCartModal"
     />
 
@@ -249,6 +250,8 @@ import Header from '@/components/home/Header.vue';
 import HeroSection from '@/components/home/HeroSection.vue';
 import FeaturedDishes from '@/components/home/FeaturedDishes.vue';
 import MenuSection from '@/components/home/MenuSection.vue';
+// Import the API service
+import { fetchMenuItems, fetchCategories, transformMenuItems } from '@/api/menuService';
 
 // Auth State
 const isAuthMenuOpen = ref(false)
@@ -312,39 +315,33 @@ const menuItems = [
   { href: '#hero', text: 'Trang chủ' },
   { href: '#featured-dishes', text: 'Món Nổi bật' },
   { href: '#menu', text: 'Thực đơn' },
-
 ]
 
-// Data
-const categories = ['Khai vị', 'Món chính', 'Tráng miệng', 'Đồ uống']
-const dishes = [
-  {
-    id: 1,
-    name: 'Phở Bò Đặc Biệt',
-    description: 'Phở bò truyền thống với các loại thịt bò chọn lọc',
-    price: 89000,
-    category: 'Món chính',
-    image: '/images/pho-bo.jpg'
-  },
-  {
-    id: 2,
-    name: 'Gỏi Cuốn Tôm Thịt',
-    description: 'Gỏi cuốn tươi với tôm, thịt và rau herbs',
-    price: 55000,
-    category: 'Khai vị',
-    image: '/images/goi-cuon.jpg'
-  },
-  {
-    id: 3,
-    name: 'Chè Trôi Nước',
-    description: 'Chè trôi nước truyền thống với nhân đậu xanh',
-    price: 35000,
-    category: 'Tráng miệng',
-    image: '/images/che-troi-nuoc.jpg'
-  },
-  // Thêm nhiều món ăn khác...
-]
-const featuredDishes = dishes.slice(0, 6) // Lấy 6 món đầu tiên làm món nổi bật
+// Data - Replace hardcoded data with API data
+const categories = fetchCategories()
+const dishes = ref([])
+const featuredDishes = ref([])
+const isLoading = ref(true)
+
+// Add onMounted hook to fetch data when component mounts
+onMounted(async () => {
+  try {
+    isLoading.value = true
+    const apiMenuItems = await fetchMenuItems()
+    const transformedItems = transformMenuItems(apiMenuItems)
+    dishes.value = transformedItems
+    featuredDishes.value = transformedItems.slice(0, 6)
+    isLoading.value = false
+  } catch (error) {
+    console.error('Failed to fetch menu items:', error)
+    isLoading.value = false
+  }
+  
+  // Select featured dishes (e.g., first 6 items or you can implement your own logic)
+  featuredDishes.value = transformedItems.slice(0, 6)
+  
+  isLoading.value = false
+})
 
 // Computed
 const cartItemCount = computed(() => {
@@ -352,7 +349,7 @@ const cartItemCount = computed(() => {
 })
 
 const filteredDishes = computed(() => {
-  return dishes.filter(dish => dish.category === selectedCategory.value)
+  return dishes.value.filter(dish => dish.category === selectedCategory.value)
 })
 
 const total = computed(() => {
