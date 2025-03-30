@@ -9,7 +9,7 @@
     >
       <div class="order-header">
         <div class="table-info">
-          <Coffee class="table-icon" />
+          <CookingPot class="table-icon" />
           <h3>Table {{ order.tableNumber }}</h3>
         </div>
         <div class="order-time">
@@ -63,9 +63,9 @@
   </template>
   
   <script setup>
-  // Không thay đổi phần script
-  import { Coffee, Clock, AlertCircle, Play, Check, Send } from 'lucide-vue-next';
-  
+
+  import { Coffee, CookingPot, Clock, AlertCircle, Play, Check, Send } from 'lucide-vue-next';
+
   const props = defineProps({
     order: {
       type: Object,
