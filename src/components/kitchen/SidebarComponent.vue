@@ -24,9 +24,14 @@
     <aside class="menu-status" v-show="activeTab === 'menu'">
       <div class="section-header">
         <h2>Menu Status</h2>
-        <button class="refresh-btn">
-          <RefreshCw class="refresh-icon" />
-        </button>
+        <div class="header-actions">
+          <button class="refresh-btn" title="Refresh menu status">
+            <RefreshCw class="refresh-icon" />
+          </button>
+          <button class="close-btn" title="Close menu panel" @click="closeMenuPanel">
+            <X class="close-icon" />
+          </button>
+        </div>
       </div>
       
       <div class="menu-categories">
@@ -53,7 +58,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { ClipboardList, BookOpen, History, Settings, RefreshCw } from 'lucide-vue-next';
+import { ClipboardList, BookOpen, History, Settings, RefreshCw, X } from 'lucide-vue-next';
 
 const props = defineProps({
   menuCategories: {
@@ -69,6 +74,11 @@ const activeTab = ref('orders');
 const setActiveTab = (tab) => {
   activeTab.value = tab;
   emit('change-tab', tab);
+};
+
+const closeMenuPanel = () => {
+  activeTab.value = 'orders';
+  emit('change-tab', 'orders');
 };
 
 const toggleItemAvailability = (categoryId, itemId) => {
@@ -159,33 +169,56 @@ const toggleItemAvailability = (categoryId, itemId) => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f1f5f9;
 }
 
-.refresh-btn {
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.refresh-btn, .close-btn {
   background: none;
   border: none;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.refresh-btn:hover {
+.refresh-btn:hover, .close-btn:hover {
+  background-color: #f1f5f9;
   color: #018ABE;
 }
 
-.refresh-icon {
+.close-btn:hover {
+  color: #EF476F;
+}
+
+.refresh-icon, .close-icon {
   width: 1.25rem;
   height: 1.25rem;
 }
 
 .menu-category {
   margin-bottom: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
 }
 
 .menu-category h3 {
   margin-bottom: 0.75rem;
   font-size: 1rem;
-  color: #64748b;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
 }
 
 .menu-items {
@@ -198,12 +231,21 @@ const toggleItemAvailability = (categoryId, itemId) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+  background-color: #f1f5f9;
 }
 
 .menu-item:last-child {
   border-bottom: none;
+}
+
+.item-name {
+  font-size: 0.9rem;
 }
 
 /* Toggle switch */
