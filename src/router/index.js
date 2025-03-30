@@ -25,6 +25,12 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     redirect: '/login'
+  },
+  {
+    path: '/kitchen',
+    name: 'Kitchen',
+    component: () => import('@/views/KitchenDashboard.vue'),
+    meta: { requiresAuth: true }
   }
 ];
 

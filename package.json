@@ -27,6 +27,7 @@
     "framer-motion": "^11.15.0",
     "gsap": "^3.12.5",
     "lottie-web": "^5.12.2",
+    "lucide-vue-next": "^0.485.0",
     "pinia": "^2.3.0",
     "remixicon": "^4.6.0",
     "swiper": "^11.2.5",
