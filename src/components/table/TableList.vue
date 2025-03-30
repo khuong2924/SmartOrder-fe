@@ -128,7 +128,7 @@ import { ref, computed, onMounted, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import TableItem from './TableItem.vue';
 import TableConfirmationModal from './TableConfirmationModal.vue';
-import tableService from '../api/tableService';
+import tableService from '../../api/tableService.js';
 
 const router = useRouter();
 const emit = defineEmits(['select-table']);

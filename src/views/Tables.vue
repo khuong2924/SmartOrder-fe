@@ -11,8 +11,8 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import TableList from '../components/TableList.vue';
-import Header from '../components/Header.vue';
+import TableList from '../components/table/TableList.vue';
+
 
 const router = useRouter();
 

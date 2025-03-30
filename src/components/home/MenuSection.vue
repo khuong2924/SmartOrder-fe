@@ -85,7 +85,7 @@
   
   <script setup>
   import { computed } from 'vue';
-  import MenuItems from '@/components/MenuItems.vue';
+  import MenuItems from '@/components/home/MenuItems.vue';
   
   // Props
   const props = defineProps({

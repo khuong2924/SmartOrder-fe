@@ -245,10 +245,10 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import { useAuthStore } from '@/store/auth';
-import Header from '@/components/Header.vue'; 
-import HeroSection from '@/components/HeroSection.vue';
-import FeaturedDishes from '@/components/FeaturedDishes.vue';
-import MenuSection from '@/components/MenuSection.vue';
+import Header from '@/components/home/Header.vue'; 
+import HeroSection from '@/components/home/HeroSection.vue';
+import FeaturedDishes from '@/components/home/FeaturedDishes.vue';
+import MenuSection from '@/components/home/MenuSection.vue';
 
 // Auth State
 const isAuthMenuOpen = ref(false)
