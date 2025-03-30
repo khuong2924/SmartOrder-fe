@@ -10,7 +10,7 @@
       <div class="user-info">
         <Bell class="notification-icon" :class="{ 'has-notifications': hasNotifications }" />
         <div class="avatar">
-          <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Chef avatar" />
+          <img src="https://static.vecteezy.com/system/resources/previews/035/316/062/non_2x/chef-in-a-cooking-hat-outline-logo-kitchen-simple-icon-vector.jpg" alt="Chef avatar" />
         </div>
         <span>Chef Minh</span>
       </div>

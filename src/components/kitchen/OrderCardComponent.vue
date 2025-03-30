@@ -40,7 +40,7 @@
           @click="$emit('start-order', order)"
         >
           <Play class="action-icon" />
-          Start Preparing
+          Tiếp nhận đơn
         </button>
         <button 
           v-if="order.status === 'in-progress'" 
@@ -48,7 +48,7 @@
           @click="$emit('complete-order', order)"
         >
           <Check class="action-icon" />
-          Mark as Ready
+          Chuẩn bị món
         </button>
         <button 
           v-if="order.status === 'ready'" 
@@ -56,7 +56,7 @@
           @click="$emit('deliver-order', order)"
         >
           <Send class="action-icon" />
-          Delivered
+          Hoàn thành
         </button>
       </div>
     </div>

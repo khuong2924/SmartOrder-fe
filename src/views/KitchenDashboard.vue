@@ -256,24 +256,24 @@ const selectedOrder = ref(null);
 // Modal functions
 const openStartModal = (order) => {
   selectedOrder.value = order;
-  confirmModalTitle.value = 'Start Preparing Order';
-  confirmMessage.value = 'Are you sure you want to start preparing this order?';
+  confirmModalTitle.value = 'Tiếp nhận đơn hàng!';
+  confirmMessage.value = 'Xác nhận bắt đầu chuẩn bị đơn hàng';
   confirmAction.value = 'start';
   showConfirmModal.value = true;
 };
 
 const openCompleteModal = (order) => {
   selectedOrder.value = order;
-  confirmModalTitle.value = 'Mark Order as Ready';
-  confirmMessage.value = 'Confirm that all items in this order are prepared and ready to be served?';
+  confirmModalTitle.value = 'Bắt đầu chuẩn bị đơn hàng!';
+  confirmMessage.value = 'Xác nhận bắt đầu chuẩn bị các món ăn';
   confirmAction.value = 'complete';
   showConfirmModal.value = true;
 };
 
 const openDeliverModal = (order) => {
   selectedOrder.value = order;
-  confirmModalTitle.value = 'Confirm Delivery';
-  confirmMessage.value = 'Confirm that this order has been delivered to the table?';
+  confirmModalTitle.value = 'Xác nhận đơn hàng đã xong!';
+  confirmMessage.value = 'Xác nhận đơn hàng đã xong và gửi thông báo tới Waiter';
   confirmAction.value = 'deliver';
   showConfirmModal.value = true;
 };

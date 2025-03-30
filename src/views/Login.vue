@@ -147,7 +147,6 @@ const loginErrors = ref({
 
 const showPassword = ref(false)
 
-// Kiểm tra đăng nhập khi component được mount
 onMounted(() => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -180,9 +179,9 @@ const handleLogin = async () => {
         loginForm.value.password
       )
       
-      // No need to manually set localStorage items as they're handled in the service
-      
-      if (authService.isWaiter || authService.isManager) {
+      if (authService.isKitchen()) {
+        await router.push('/kitchen')
+      } else if (authService.isWaiter() || authService.isManager()) {
         await router.push('/table')
       } else {
         await router.push('/')

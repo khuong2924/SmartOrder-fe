@@ -50,6 +50,9 @@ class AuthService {
   isManager() {
     return this.hasRole('ROLE_MANAGER')
   }
+  isKitchen() {
+    return this.hasRole('ROLE_KITCHEN_STAFF')
+  }
 
 
   // Helper method to set auth header
