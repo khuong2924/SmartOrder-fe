@@ -250,8 +250,9 @@ import Header from '@/components/home/Header.vue';
 import HeroSection from '@/components/home/HeroSection.vue';
 import FeaturedDishes from '@/components/home/FeaturedDishes.vue';
 import MenuSection from '@/components/home/MenuSection.vue';
-// Import the API service
+// Import the API services
 import { fetchMenuItems, fetchCategories, transformMenuItems } from '@/api/menuService';
+import cartService from '@/api/cartService';
 
 // Auth State
 const isAuthMenuOpen = ref(false)
@@ -395,56 +396,197 @@ const closeAddToCartModal = () => {
   isAddToCartModalOpen.value = false
 }
 
-const confirmAddToCart = () => {
+const confirmAddToCart = async () => {
   if (selectedDish.value) {
-    const item = {
-      ...selectedDish.value,
-      quantity: orderQuantity.value,
-      note: orderNote.value.trim()
+    try {
+      const cartId = localStorage.getItem('currentCartId');
+      console.log('Current cart ID:', cartId);
+      
+      if (!cartId) {
+        console.log('No cart ID found, attempting to create a new cart');
+        // Try to create a new cart
+        const userId = localStorage.getItem('userId');
+        const selectedTable = JSON.parse(localStorage.getItem('selectedTable'));
+        
+        if (!selectedTable || !selectedTable.id) {
+          alert('Không tìm thấy thông tin bàn. Vui lòng chọn bàn trước khi đặt hàng!');
+          closeAddToCartModal();
+          return;
+        }
+        
+        try {
+          await cartService.createCart(selectedTable.id, userId);
+          const newCartId = localStorage.getItem('currentCartId');
+          console.log('Created new cart with ID:', newCartId);
+          
+          if (!newCartId) {
+            alert('Không thể tạo giỏ hàng mới. Vui lòng thử lại!');
+            closeAddToCartModal();
+            return;
+          }
+        } catch (createCartError) {
+          console.error('Error creating new cart:', createCartError);
+          alert('Không thể tạo giỏ hàng mới. Vui lòng thử lại!');
+          closeAddToCartModal();
+          return;
+        }
+      }
+      
+      // Get the cart ID again (it might have been updated)
+      const updatedCartId = localStorage.getItem('currentCartId');
+      
+      const item = {
+        ...selectedDish.value,
+        quantity: orderQuantity.value,
+        note: orderNote.value.trim()
+      };
+      
+      console.log('Adding to cart:', item);
+      
+      // Add to API cart
+      try {
+        const response = await cartService.addItemToCart(updatedCartId, item);
+        
+        // If successful, store the cartItemId for later use (for deletion)
+        if (response && response.id) {
+          item.cartItemId = response.id;
+          console.log('Item added to cart with ID:', response.id);
+        }
+        
+        // Update local cart state
+        const existingItem = cart.value.find(i => 
+          i.id === item.id && i.note === item.note
+        );
+        
+        if (existingItem) {
+          existingItem.quantity += orderQuantity.value;
+          // Update the item in the API cart
+          await cartService.updateCartItemQuantity(updatedCartId, existingItem.cartItemId, existingItem.quantity);
+        } else {
+          cart.value.push(item);
+        }
+        
+        closeAddToCartModal();
+      } catch (addItemError) {
+        console.error('Error adding item to cart:', addItemError);
+        let errorMessage = 'Có lỗi xảy ra khi thêm món vào giỏ hàng. Vui lòng thử lại!';
+        
+        if (addItemError.response && addItemError.response.data) {
+          console.error('Error response data:', addItemError.response.data);
+          if (addItemError.response.data.message) {
+            errorMessage += ' Chi tiết: ' + addItemError.response.data.message;
+          }
+        }
+        
+        alert(errorMessage);
+        closeAddToCartModal();
+      }
+    } catch (error) {
+      console.error('Unexpected error in confirmAddToCart:', error);
+      alert('Có lỗi xảy ra. Vui lòng thử lại!');
+      closeAddToCartModal();
+    }
+  }
+}
+
+const increaseQuantity = async (item) => {
+  try {
+    const cartId = localStorage.getItem('currentCartId');
+    if (!cartId || !item.cartItemId) {
+      // Just update local state if we can't update API
+      item.quantity++;
+      return;
     }
     
-    const existingItem = cart.value.find(i => 
-      i.id === item.id && i.note === item.note
-    )
+    // Update quantity in API
+    await cartService.updateCartItemQuantity(cartId, item.cartItemId, item.quantity + 1);
     
-    if (existingItem) {
-      existingItem.quantity += orderQuantity.value
+    // Update local state
+    item.quantity++;
+  } catch (error) {
+    console.error('Error increasing quantity:', error);
+  }
+}
+
+const decreaseQuantity = async (item) => {
+  try {
+    if (item.quantity > 1) {
+      const cartId = localStorage.getItem('currentCartId');
+      if (!cartId || !item.cartItemId) {
+        // Just update local state if we can't update API
+        item.quantity--;
+        return;
+      }
+      
+      // Update quantity in API
+      await cartService.updateCartItemQuantity(cartId, item.cartItemId, item.quantity - 1);
+      
+      // Update local state
+      item.quantity--;
     } else {
-      cart.value.push(item)
+      // Remove item if quantity would be 0
+      await removeFromCart(item);
+    }
+  } catch (error) {
+    console.error('Error decreasing quantity:', error);
+  }
+}
+
+const removeFromCart = async (item) => {
+  try {
+    const cartId = localStorage.getItem('currentCartId');
+    if (!cartId) {
+      alert('Không tìm thấy giỏ hàng. Vui lòng thử lại!');
+      return;
     }
     
-    closeAddToCartModal()
-  }
-}
-
-const increaseQuantity = (item) => {
-  item.quantity++
-}
-
-const decreaseQuantity = (item) => {
-  if (item.quantity > 1) {
-    item.quantity--
-  } else {
-    removeFromCart(item)
-  }
-}
-
-const removeFromCart = (item) => {
-  const index = cart.value.findIndex(cartItem => cartItem.id === item.id)
-  if (index !== -1) {
-    cart.value.splice(index, 1)
+    // If the item has a cartItemId (from API), use it to delete
+    if (item.cartItemId) {
+      await cartService.removeCartItem(cartId, item.cartItemId);
+    }
+    
+    // Remove from local cart state
+    const index = cart.value.findIndex(cartItem => cartItem.id === item.id);
+    if (index !== -1) {
+      cart.value.splice(index, 1);
+    }
+  } catch (error) {
+    console.error('Error removing item from cart:', error);
+    alert('Có lỗi xảy ra khi xóa món khỏi giỏ hàng. Vui lòng thử lại!');
   }
 }
 
 const placeOrder = async () => {
   try {
-    // Implement your order API call here
-    await submitOrder(cart.value)
-    cart.value = []
-    isCartOpen.value = false
-    alert('Đặt hàng thành công!')
+    const cartId = localStorage.getItem('currentCartId');
+    if (!cartId) {
+      alert('Không tìm thấy giỏ hàng. Vui lòng thử lại!');
+      return;
+    }
+    
+    // Get user ID from localStorage
+    const userId = localStorage.getItem('userId');
+    const selectedTable = JSON.parse(localStorage.getItem('selectedTable'));
+    
+    if (!selectedTable || !selectedTable.id) {
+      alert('Không tìm thấy thông tin bàn. Vui lòng chọn bàn trước khi đặt hàng!');
+      return;
+    }
+    
+    // Checkout the cart to create an order
+    await cartService.checkout(cartId, selectedTable.id, userId);
+    
+    // Clear the cart after successful checkout
+    cart.value = [];
+    isCartOpen.value = false;
+    
+    // Create a new cart for the same table
+    await cartService.createCart(selectedTable.id, userId);
+    
+    alert('Đặt hàng thành công!');
   } catch (error) {
-    alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!')
+    console.error('Error placing order:', error);
+    alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
   }
 }
 

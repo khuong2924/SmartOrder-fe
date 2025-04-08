@@ -12,6 +12,25 @@ class AuthService {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data))
         localStorage.setItem('token', response.data.token)
+        localStorage.setItem('userId', response.data.id)
+
+        this.setAuthHeader()
+        
+        const selectedTable = localStorage.getItem('selectedTable')
+        if (selectedTable && this.isWaiter()) {
+          try {
+            const cartResponse = await axios.post('http://localhost/domain2/carts', {
+              tableId: JSON.parse(selectedTable).id,
+              userId: response.data.id
+            })
+            
+            if (cartResponse.data && cartResponse.data.id) {
+              localStorage.setItem('currentCartId', cartResponse.data.id)
+            }
+          } catch (cartError) {
+            console.error('Error creating cart after login:', cartError)
+          }
+        }
       }
       return response.data
     } catch (error) {

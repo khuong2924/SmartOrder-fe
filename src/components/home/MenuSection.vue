@@ -1,7 +1,9 @@
 <template>
     <section id="menu" class="py-20 bg-gray-100">
       <div class="container mx-auto px-4">
-        <h2 class="text-5xl text-[#018ABE] font-bold text-center mb-12" data-aos="fade-up">Thực đơn</h2>
+        <h2 class="text-4xl mb-8 md:text-5xl text-center font-svn-avo-bold animate__animated animate__fadeInDown 
+                   bg-gradient-to-r from-[#018ABE] via-[#018ABE]-200 to-[#018ABE] bg-clip-text text-transparent
+                   drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] tracking-tight" data-aos="fade-up">MENU</h2>
         
         <!-- Loading indicator -->
         <div v-if="isLoading" class="flex justify-center items-center py-20">
@@ -49,20 +51,6 @@
                         class="absolute -bottom-1 left-0 right-0 h-0.5 bg-white/70 transform origin-left scale-x-100 transition-transform"></span>
                 </span>
                 
-                <!-- Decorative particles for selected category -->
-                <span v-if="selectedCategory === category" 
-                      class="absolute -right-1 -top-1 w-3 h-3 bg-white rounded-full opacity-70 animate-ping"></span>
-                      
-                <!-- Active indicator with pulse animation -->
-                <span v-if="selectedCategory === category" 
-                      class="absolute -bottom-1 left-1/2 w-12 h-1 bg-white rounded-full transform -translate-x-1/2
-                            shadow-lg animate-pulse"></span>
-                            
-                <!-- Badge counter (optional - you can add dish counts per category) -->
-                <span v-if="selectedCategory === category" 
-                      class="absolute -top-2 -right-2 bg-white text-[#018ABE] text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md">
-                  {{ filteredDishes.length }}
-                </span>
               </button>
             </div>
             

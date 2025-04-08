@@ -1,7 +1,9 @@
 <template>
     <section id="featured-dishes" class="py-20 bg-gray-100">
       <div class="container mx-auto px-4">
-        <h2 class="text-4xl font-svn-avo-bold text-center mb-12" data-aos="fade-up">Món nổi bật</h2>
+        <h2 class="text-4xl mb-8 md:text-5xl text-center font-svn-avo-bold animate__animated animate__fadeInDown 
+                   bg-gradient-to-r from-[#018ABE] via-[#018ABE]-200 to-[#018ABE] bg-clip-text text-transparent
+                   drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] tracking-tight" data-aos="fade-up">Featured Dishes</h2>
         <div class="swiper-container" data-aos="fade-up" data-aos-delay="200">
           <div class="swiper-wrapper">
             <div v-for="dish in featuredDishes" 
