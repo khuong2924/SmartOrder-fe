@@ -231,8 +231,13 @@
       </div>
     </Transition>
 
-    
-
+    <!-- Success Modal -->
+    <SuccessModal 
+      :show="showSuccessModal" 
+      :table-number="orderSuccessInfo.tableNumber"
+      :item-count="orderSuccessInfo.itemCount"
+      @close="showSuccessModal = false"
+    />
   </div>
 </template>
 
@@ -250,6 +255,7 @@ import Header from '@/components/home/Header.vue';
 import HeroSection from '@/components/home/HeroSection.vue';
 import FeaturedDishes from '@/components/home/FeaturedDishes.vue';
 import MenuSection from '@/components/home/MenuSection.vue';
+import SuccessModal from '@/components/modals/SuccessModal.vue'; // Make sure to import SuccessModal
 // Import the API services
 import { fetchMenuItems, fetchCategories, transformMenuItems } from '@/api/menuService';
 import cartService from '@/api/cartService';
@@ -556,6 +562,16 @@ const removeFromCart = async (item) => {
   }
 }
 
+// ... existing code ...
+
+// Add this to your reactive variables
+const showSuccessModal = ref(false);
+const orderSuccessInfo = ref({
+  tableNumber: '',
+  itemCount: 0
+});
+
+// Modify the placeOrder function to show the success modal
 const placeOrder = async () => {
   try {
     const cartId = localStorage.getItem('currentCartId');
@@ -576,14 +592,28 @@ const placeOrder = async () => {
     // Checkout the cart to create an order
     await cartService.checkout(cartId, selectedTable.id, userId);
     
+    // Set success info for the modal
+    orderSuccessInfo.value = {
+      tableNumber: selectedTable.number || selectedTable.tableNumber || 'N/A',
+      itemCount: cart.value.length
+    };
+    
     // Clear the cart after successful checkout
     cart.value = [];
     isCartOpen.value = false;
     
-    // Create a new cart for the same table
-    await cartService.createCart(selectedTable.id, userId);
+    // Thử tạo giỏ hàng mới cho cùng một bàn, nhưng xử lý lỗi một cách nhẹ nhàng
+    try {
+      await cartService.createCart(selectedTable.id, userId);
+    } catch (cartError) {
+      console.warn('Không thể tự động tạo giỏ hàng mới:', cartError);
+      // Chúng ta không cần thông báo cho người dùng về điều này - đơn hàng vẫn được đặt thành công
+      // Chỉ cần xóa ID giỏ hàng hiện tại khỏi localStorage
+      localStorage.removeItem('currentCartId');
+    }
     
-    alert('Đặt hàng thành công!');
+    // Show success modal instead of alert
+    showSuccessModal.value = true;
   } catch (error) {
     console.error('Error placing order:', error);
     alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
