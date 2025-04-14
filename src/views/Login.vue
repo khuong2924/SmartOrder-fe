@@ -188,9 +188,9 @@ const handleLogin = async () => {
       localStorage.setItem('roles', JSON.stringify(response.roles))
       
       if (authService.isKitchen()) {
-        await router.push('/kitchen')
+        await router.push('/kitchen-page')
       } else if (authService.isWaiter() || authService.isManager()) {
-        await router.push('/table')
+        await router.push('/table-page')
       } else {
         await router.push('/')
       }

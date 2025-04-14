@@ -17,7 +17,7 @@ const routes = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/table',
+    path: '/table-page',
     name: 'Tables',
     component: Tables,
     meta: { requiresAuth: true }
@@ -27,7 +27,7 @@ const routes = [
     redirect: '/login'
   },
   {
-    path: '/kitchen',
+    path: '/kitchen-page',
     name: 'Kitchen',
     component: () => import('@/views/KitchenDashboard.vue'),
     meta: { requiresAuth: true }
