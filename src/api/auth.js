@@ -1,6 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
+import { API_CONFIG } from './apiConfig';
 
-const API_URL = 'http://localhost/identity/auth'
+const API_URL = API_CONFIG.AUTH_API_URL;
 
 class AuthService {
   async login(username, password) {
@@ -8,81 +9,80 @@ class AuthService {
       const response = await axios.post(`${API_URL}/signin`, {
         username,
         password
-      })
+      });
       if (response.data.token) {
-        localStorage.setItem('user', JSON.stringify(response.data))
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('userId', response.data.id)
+        localStorage.setItem('user', JSON.stringify(response.data));
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userId', response.data.id);
 
-        this.setAuthHeader()
+        this.setAuthHeader();
         
-        const selectedTable = localStorage.getItem('selectedTable')
+        const selectedTable = localStorage.getItem('selectedTable');
         if (selectedTable && this.isWaiter()) {
           try {
-            const cartResponse = await axios.post('http://localhost/domain2/carts', {
+            const cartResponse = await axios.post(`${API_CONFIG.DOMAIN2_API_URL}/carts`, {
               tableId: JSON.parse(selectedTable).id,
               userId: response.data.id
-            })
+            });
             
             if (cartResponse.data && cartResponse.data.id) {
-              localStorage.setItem('currentCartId', cartResponse.data.id)
+              localStorage.setItem('currentCartId', cartResponse.data.id);
             }
           } catch (cartError) {
-            console.error('Error creating cart after login:', cartError)
+            console.error('Error creating cart after login:', cartError);
           }
         }
       }
-      return response.data
+      return response.data;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
   logout() {
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    localStorage.removeItem('selectedTable')
-    localStorage.removeItem('currentTableNumber')
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('selectedTable');
+    localStorage.removeItem('currentTableNumber');
   }
 
   getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'))
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   getToken() {
-    return localStorage.getItem('token')
+    return localStorage.getItem('token');
   }
 
   isAuthenticated() {
-    return !!this.getToken()
+    return !!this.getToken();
   }
 
   hasRole(role) {
-    const user = this.getCurrentUser()
-    return user && user.roles && user.roles.includes(role)
+    const user = this.getCurrentUser();
+    return user && user.roles && user.roles.includes(role);
   }
 
   isWaiter() {
-    return this.hasRole('ROLE_WAITER')
+    return this.hasRole('ROLE_WAITER');
   }
 
   isManager() {
-    return this.hasRole('ROLE_MANAGER')
+    return this.hasRole('ROLE_MANAGER');
   }
+
   isKitchen() {
-    return this.hasRole('ROLE_KITCHEN_STAFF')
+    return this.hasRole('ROLE_KITCHEN_STAFF');
   }
 
-
-  // Helper method to set auth header
   setAuthHeader() {
-    const token = this.getToken()
+    const token = this.getToken();
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
-      delete axios.defaults.headers.common['Authorization']
+      delete axios.defaults.headers.common['Authorization'];
     }
   }
 }
 
-export default new AuthService()
+export default new AuthService();

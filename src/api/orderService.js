@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { API_CONFIG } from './apiConfig';
 
-const API_URL = 'http://localhost';
+const API_URL = API_CONFIG.KITCHEN_API_URL;
 
 class OrderService {
   // Fetch all orders
   async getOrders() {
     try {
-      const response = await axios.get(`${API_URL}/kitchen/orders`);
+      const response = await axios.get(`${API_URL}/orders`);
       return response.data;
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -17,7 +18,7 @@ class OrderService {
   // Fetch pending orders
   async getPendingOrders() {
     try {
-      const response = await axios.get(`${API_URL}/kitchen/orders/pending`);
+      const response = await axios.get(`${API_URL}/orders/pending`);
       return response.data;
     } catch (error) {
       console.error('Error fetching pending orders:', error);
@@ -28,7 +29,7 @@ class OrderService {
   // Fetch confirmed orders
   async getConfirmedOrders() {
     try {
-      const response = await axios.get(`${API_URL}/kitchen/orders/confirmed`);
+      const response = await axios.get(`${API_URL}/orders/confirmed`);
       return response.data;
     } catch (error) {
       console.error('Error fetching confirmed orders:', error);
@@ -39,7 +40,7 @@ class OrderService {
   // Fetch in-progress orders
   async getInProgressOrders() {
     try {
-      const response = await axios.get(`${API_URL}/kitchen/orders/in-progress`);
+      const response = await axios.get(`${API_URL}/orders/in-progress`);
       return response.data;
     } catch (error) {
       console.error('Error fetching in-progress orders:', error);
@@ -47,10 +48,21 @@ class OrderService {
     }
   }
 
+  // New method for ready orders
+  async getReadyOrders() {
+    try {
+      const response = await axios.get(`${API_URL}/orders/ready`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching ready orders:', error);
+      throw error;
+    }
+  }
+
   // Start order (move from CONFIRMED to IN_PROGRESS)
   async startOrder(orderId) {
     try {
-      const response = await axios.post(`${API_URL}/kitchen/orders/${orderId}/start`);
+      const response = await axios.post(`${API_URL}/orders/${orderId}/start`);
       return response.data;
     } catch (error) {
       console.error('Error starting order:', error);
@@ -61,7 +73,7 @@ class OrderService {
   // Mark order as ready
   async markOrderReady(orderId) {
     try {
-      const response = await axios.post(`${API_URL}/kitchen/orders/${orderId}/ready`);
+      const response = await axios.post(`${API_URL}/orders/${orderId}/ready`);
       return response.data;
     } catch (error) {
       console.error('Error marking order as ready:', error);
@@ -72,7 +84,7 @@ class OrderService {
   // Mark order item as completed
   async completeOrderItem(orderItemId) {
     try {
-      const response = await axios.put(`${API_URL}/kitchen/orders/items/status`, {
+      const response = await axios.put(`${API_URL}/orders/items/status`, {
         orderItemId: orderItemId,
         status: "COMPLETED"
       });
@@ -86,7 +98,7 @@ class OrderService {
   // Confirm order
   async confirmOrder(orderId) {
     try {
-      const response = await axios.post(`${API_URL}/kitchen/orders/${orderId}/confirm`);
+      const response = await axios.post(`${API_URL}/orders/${orderId}/confirm`);
       return response.data;
     } catch (error) {
       console.error('Error confirming order:', error);
@@ -97,7 +109,7 @@ class OrderService {
   // Reject order
   async rejectOrder(orderId, reason) {
     try {
-      const response = await axios.post(`${API_URL}/kitchen/orders/${orderId}/reject`, { reason });
+      const response = await axios.post(`${API_URL}/orders/${orderId}/reject`, { reason });
       return response.data;
     } catch (error) {
       console.error('Error rejecting order:', error);

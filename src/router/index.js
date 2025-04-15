@@ -31,6 +31,11 @@ const routes = [
     name: 'Kitchen',
     component: () => import('@/views/KitchenDashboard.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/test-page',
+    name: 'Test',
+    component: () => import('@/views/TestPage.vue'),
   }
 ];
 

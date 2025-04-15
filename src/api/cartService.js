@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_CONFIG } from './apiConfig';
 
-const API_URL = 'http://localhost/domain2';
+const API_URL = API_CONFIG.DOMAIN2_API_URL;
 
 class CartService {
   /**

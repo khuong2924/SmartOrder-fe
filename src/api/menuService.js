@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_CONFIG } from './apiConfig';
 
-const API_URL = 'http://localhost/domain2';
+const API_URL = API_CONFIG.DOMAIN2_API_URL;
 
 export const fetchMenuItems = async () => {
   try {
@@ -12,14 +13,21 @@ export const fetchMenuItems = async () => {
   }
 };
 
-export const fetchCategories = () => {
-  // Map category IDs to their names
-  return [
-    'Khai vị',
-    'Món chính',
-    'Tráng miệng',
-    'Đồ uống'
-  ];
+export const fetchCategories = async () => {
+
+  try {
+    const response = await axios.get(`${API_URL}/categories`);
+    return response.data.map(category => category.name);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    // Fallback to mock data if API fails
+    return [
+      'Khai vị',
+      'Món chính',
+      'Tráng miệng',
+      'Đồ uống'
+    ];
+  }
 };
 
 // Helper function to transform API data to match the expected format in the app
