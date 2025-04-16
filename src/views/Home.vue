@@ -242,7 +242,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import Swiper from 'swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import AOS from 'aos';
@@ -256,6 +256,7 @@ import HeroSection from '@/components/home/HeroSection.vue';
 import FeaturedDishes from '@/components/home/FeaturedDishes.vue';
 import MenuSection from '@/components/home/MenuSection.vue';
 import SuccessModal from '@/components/modals/SuccessModal.vue'; // Make sure to import SuccessModal
+import { orderUpdatesChannel, orderItemUpdatesChannel } from '../services/pusher';
 // Import the API services
 import { fetchMenuItems, fetchCategories, transformMenuItems } from '@/api/menuService';
 import cartService from '@/api/cartService';
@@ -711,7 +712,27 @@ onMounted(async () => {
     currentTableNumber.value = existingTableNumber
     showNewOrderModal.value = false
   }
-})
+
+  // Subscribe to order updates for customer notifications
+  orderUpdatesChannel.bind('status-update', (data) => {
+    console.log('Order status update received:', data);
+    // Show notification to customer about order status change
+    if (currentOrder.value && currentOrder.value.id === data.orderId) {
+      // Update current order status
+      currentOrder.value.status = data.status;
+      
+      // Show notification
+      const message = `Your order status has been updated to: ${data.status}`;
+      // Replace with your preferred notification method
+      alert(message);
+    }
+  });
+});
+
+onBeforeUnmount(() => {
+  // Unbind Pusher events
+  orderUpdatesChannel.unbind('status-update');
+});
 
 // Particles setup
 const particlesInit = async (engine) => {
