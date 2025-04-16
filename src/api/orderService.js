@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { API_CONFIG } from './apiConfig';
 
-const API_URL = API_CONFIG.KITCHEN_API_URL;
+
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8080/kitchen'
+  : API_CONFIG.KITCHEN_API_URL;
+
+console.log('Order Service API URL:', API_URL);
 
 class OrderService {
   // Fetch all orders

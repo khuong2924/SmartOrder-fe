@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { API_CONFIG } from './apiConfig';
 
-const API_URL = API_CONFIG.DOMAIN2_API_URL;
+
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8080/domain2'
+  : API_CONFIG.DOMAIN2_API_URL;
+
+console.log('Cart Service API URL:', API_URL);
 
 class CartService {
   /**

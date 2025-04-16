@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { API_CONFIG } from './apiConfig';
 
-const API_URL = API_CONFIG.DOMAIN2_API_URL;
+// Force the correct URL for menu API
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8080/domain2'
+  : API_CONFIG.DOMAIN2_API_URL;
+
+console.log('Menu Service API URL:', API_URL);
 
 export const fetchMenuItems = async () => {
   try {

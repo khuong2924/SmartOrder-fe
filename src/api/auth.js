@@ -1,15 +1,27 @@
 import axios from 'axios';
 import { API_CONFIG } from './apiConfig';
 
-const API_URL = API_CONFIG.AUTH_API_URL;
+
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:8080/identity/auth'
+  : API_CONFIG.AUTH_API_URL;
+
+console.log('Auth API URL:', API_URL);
 
 class AuthService {
   async login(username, password) {
     try {
+      console.log('Sending login request to:', `${API_URL}/signin`);
+      console.log('With payload:', { username, password });
+      
       const response = await axios.post(`${API_URL}/signin`, {
         username,
         password
       });
+      
+
+      console.log('Login response:', response.data);
+      
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));
         localStorage.setItem('token', response.data.token);
@@ -35,6 +47,7 @@ class AuthService {
       }
       return response.data;
     } catch (error) {
+      console.error('Login error details:', error.response?.data || error.message);
       throw error;
     }
   }
