@@ -112,13 +112,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, onBeforeUnmount } from 'vue';
 import HeaderComponent from '../components/kitchen/HeaderComponent.vue';
 import SidebarComponent from '../components/kitchen/SidebarComponent.vue';
 import OrderCardComponent from '../components/kitchen/OrderCardComponent.vue';
 import ConfirmModalComponent from '../components/kitchen/ConfirmModalComponent.vue';
 import RejectModalComponent from '../components/kitchen/RejectModalComponent.vue';
 import orderService from '../api/orderService.js';
+import { orderUpdatesChannel, orderItemUpdatesChannel, menuUpdatesChannel } from '../services/pusher';
 
 // Orders data
 const orders = ref([]);
@@ -347,6 +348,24 @@ watch(activeFilter, () => {
 
 // Fetch orders khi component được mount và thiết lập polling
 onMounted(() => {
+  // Subscribe to Pusher channels
+  orderUpdatesChannel.bind('status-update', (data) => {
+    console.log('Received order status update via Pusher:', data);
+    // Refresh orders or update specific order in the list
+    fetchOrders();
+  });
+  
+  orderItemUpdatesChannel.bind('item-status-update', (data) => {
+    console.log('Received order item status update via Pusher:', data);
+    // Update the specific order item in the UI
+    fetchOrders();
+  });
+  
+  menuUpdatesChannel.bind('availability-update', (data) => {
+    console.log('Received menu item availability update via Pusher:', data);
+    // Update menu item availability in the UI if needed
+  });
+  
   // Lấy đơn hàng khi component được mount
   fetchOrders();
   
@@ -359,6 +378,13 @@ onMounted(() => {
   onUnmounted(() => {
     clearInterval(intervalId);
   });
+});
+
+onBeforeUnmount(() => {
+  // Clean up Pusher bindings
+  orderUpdatesChannel.unbind('status-update');
+  orderItemUpdatesChannel.unbind('item-status-update');
+  menuUpdatesChannel.unbind('availability-update');
 });
 </script>
 
