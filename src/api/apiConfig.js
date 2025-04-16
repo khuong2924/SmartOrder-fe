@@ -1,7 +1,6 @@
-
 const BASE_URL = import.meta.env.VITE_API_URL || 
                  window.API_URL || 
-                 (window.location.hostname === 'localhost' ? 'http://localhost:8080' : `https://${window.location.hostname}`);
+                 (window.location.hostname === 'localhost' ? 'http://localhost:8080' : `https://truongvinhkhuong.io.vn`);
 
 const IDENTITY_PATH = import.meta.env.VITE_IDENTITY_API_PATH || window.IDENTITY_API_PATH || '/identity';
 const DOMAIN2_PATH = import.meta.env.VITE_DOMAIN2_API_PATH || window.DOMAIN2_API_PATH || '/domain2';
