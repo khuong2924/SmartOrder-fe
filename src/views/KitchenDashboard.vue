@@ -346,39 +346,6 @@ watch(activeFilter, () => {
   fetchOrders();
 });
 
-// Fetch orders khi component được mount và thiết lập polling
-onMounted(() => {
-  // Subscribe to Pusher channels
-  orderUpdatesChannel.bind('status-update', (data) => {
-    console.log('Received order status update via Pusher:', data);
-    // Refresh orders or update specific order in the list
-    fetchOrders();
-  });
-  
-  orderItemUpdatesChannel.bind('item-status-update', (data) => {
-    console.log('Received order item status update via Pusher:', data);
-    // Update the specific order item in the UI
-    fetchOrders();
-  });
-  
-  menuUpdatesChannel.bind('availability-update', (data) => {
-    console.log('Received menu item availability update via Pusher:', data);
-    // Update menu item availability in the UI if needed
-  });
-  
-  // Lấy đơn hàng khi component được mount
-  fetchOrders();
-  
-  // Thiết lập interval để refresh đơn hàng mỗi 10 giây
-  const intervalId = setInterval(() => {
-    fetchOrders();
-  }, 10000);
-  
-  // Cleanup interval khi component unmount
-  onUnmounted(() => {
-    clearInterval(intervalId);
-  });
-});
 
 onBeforeUnmount(() => {
   // Clean up Pusher bindings
@@ -386,6 +353,43 @@ onBeforeUnmount(() => {
   orderItemUpdatesChannel.unbind('item-status-update');
   menuUpdatesChannel.unbind('availability-update');
 });
+
+onMounted(() => {
+  // Subscribe to Pusher channels
+  orderUpdatesChannel.bind('status-update', (data) => {
+    console.log('Received order status update via Pusher:', data);
+    // find and update the order in the orders array
+    const idx = orders.value.findIndex(order => order.id === data.orderId);
+    if (idx !== -1) {
+      orders.value[idx] = { ...orders.value[idx], status: data.status, ...data.updatedFields };
+    } else {
+      // fetch the new order if it doesn't exist
+      // fetchOrders();
+    }
+  });
+
+  orderItemUpdatesChannel.bind('item-status-update', (data) => {
+    console.log('Received order item status update via Pusher:', data);
+    // find the order and update the specific item
+    const order = orders.value.find(order => order.id === data.orderId);
+    if (order && order.items) {
+      const itemIdx = order.items.findIndex(item => item.id === data.orderItemId);
+      if (itemIdx !== -1) {
+        order.items[itemIdx] = { ...order.items[itemIdx], status: data.status, ...data.updatedFields };
+      }
+    }
+  });
+
+  menuUpdatesChannel.bind('availability-update', (data) => {
+    console.log('Received menu item availability update via Pusher:', data);
+    // update menu item availability 
+    //  ...
+  });
+
+  // Fetch orders once when component is mounted
+  fetchOrders();
+});
+
 </script>
 
 <style scoped>
