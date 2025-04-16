@@ -37,5 +37,7 @@ RUN { \
     } > /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]
