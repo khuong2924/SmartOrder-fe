@@ -326,7 +326,7 @@ const menuItems = [
 ]
 
 // Data - Replace hardcoded data with API data
-const categories = fetchCategories()
+const categories = ref([])
 const dishes = ref([])
 const featuredDishes = ref([])
 const isLoading = ref(true)
@@ -335,21 +335,23 @@ const isLoading = ref(true)
 onMounted(async () => {
   try {
     isLoading.value = true
+    
     const apiMenuItems = await fetchMenuItems()
     const transformedItems = transformMenuItems(apiMenuItems)
     dishes.value = transformedItems
+    
     featuredDishes.value = transformedItems.slice(0, 6)
+    
+    // Fetch categories
+    categories.value = await fetchCategories()
+    
     isLoading.value = false
   } catch (error) {
     console.error('Failed to fetch menu items:', error)
     isLoading.value = false
   }
-  
-  // Select featured dishes (e.g., first 6 items or you can implement your own logic)
-  featuredDishes.value = transformedItems.slice(0, 6)
-  
-  isLoading.value = false
 })
+
 
 // Computed
 const cartItemCount = computed(() => {
