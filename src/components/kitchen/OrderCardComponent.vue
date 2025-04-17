@@ -11,7 +11,7 @@
     <div class="order-header">
       <div class="table-info">
         <CookingPot class="table-icon" />
-        <h3>Table {{ order.tableNumber }}</h3>
+        <h3>Bàn số: {{ order.tableNumber }}</h3>
       </div>
       <div class="order-time">
         <Clock class="time-icon" />
@@ -28,7 +28,7 @@
           </div>
           <div v-if="item.specialInstructions || item.notes" class="item-notes">
             <AlertCircle class="note-icon" />
-            <span>{{ item.specialInstructions || item.notes }}</span>
+            <span>Ghi chú: {{ item.specialInstructions || item.notes }}</span>
           </div>
           
           <!-- Nút hoàn thành cho từng món ăn trong trạng thái IN_PROGRESS -->
@@ -51,21 +51,21 @@
     </div>
     
     <div class="order-actions">
-      <!-- Nút cho đơn hàng PENDING -->
+
       <div v-if="order.status === 'PENDING'" class="action-buttons">
         <button 
           class="action-btn reject-btn"
           @click="$emit('reject-order', order)"
         >
           <X class="action-icon" />
-          Từ chối
+          
         </button>
         <button 
           class="action-btn confirm-btn"
           @click="$emit('confirm-order', order)"
         >
           <Check class="action-icon" />
-          Xác nhận
+          
         </button>
       </div>
       

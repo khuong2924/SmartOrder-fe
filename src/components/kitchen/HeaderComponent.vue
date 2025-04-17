@@ -3,7 +3,7 @@
       <div class="logo-container">
         <div class="logo">
           <UtensilsCrossed class="logo-icon" />
-          <h1>Kitchen Dashboard</h1>
+          <h1>Quản lý bếp</h1>
         </div>
         <span class="date-time">{{ currentDateTime }}</span>
       </div>

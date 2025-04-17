@@ -153,11 +153,12 @@ const reservationData = ref({
 
 // In TableList.vue
 const handleTableAction = (table) => {
-  console.log('TableList: received action event', table);
   selectedTable.value = table;
   if (table.status === 'available') {
-    console.log('Showing confirmation modal');
     showConfirmationModal.value = true;
+  } else if (table.status === 'occupied') {
+    // Emit a different event or open a modal for options
+    emit('occupied-table-action', table);
   }
 };
 

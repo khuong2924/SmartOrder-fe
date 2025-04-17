@@ -11,52 +11,52 @@
 
       <main class="main-content">
         <div class="section-header">
-          <h2>Active Orders</h2>
+     
           <div class="filters">
             <button 
               class="filter-btn" 
               :class="{ active: activeFilter === 'all' }"
               @click="activeFilter = 'all'"
             >
-              <span class="filter-icon">🍽️</span>
-              <span class="filter-text">All</span>
-              <span class="filter-count">{{ orders.length }}</span>
+            
+              <span class="filter-text">Tất cả</span>
+              
             </button>
             <button 
               class="filter-btn" 
               :class="{ active: activeFilter === 'PENDING' }"
               @click="activeFilter = 'PENDING'"
             >
-              <span class="filter-icon">⏳</span>
-              <span class="filter-text">Pending</span>
-              <span class="filter-count">{{ pendingOrdersCount }}</span>
+             
+              <span class="filter-text">Chờ xác nhận</span>
+             
             </button>
             <button 
               class="filter-btn" 
               :class="{ active: activeFilter === 'CONFIRMED' }"
               @click="activeFilter = 'CONFIRMED'"
             >
-              <span class="filter-icon">✅</span>
-              <span class="filter-text">Confirmed</span>
-              <span class="filter-count">{{ confirmedOrdersCount }}</span>
+           
+              <span class="filter-text">Đã xác nhận</span>
+       
             </button>
             <button 
               class="filter-btn" 
               :class="{ active: activeFilter === 'IN_PROGRESS' }"
               @click="activeFilter = 'IN_PROGRESS'"
             >
-              <span class="filter-icon">👨‍🍳</span>
-              <span class="filter-text">In Progress</span>
-              <span class="filter-count">{{ inProgressOrdersCount }}</span>
+        
+              <span class="filter-text">Đang làm</span>
+         
             </button>
             <button 
               class="filter-btn" 
               :class="{ active: activeFilter === 'READY' }"
               @click="activeFilter = 'READY'"
             >
-              <span class="filter-icon">🔔</span>
-              <span class="filter-text">Ready</span>
-              <span class="filter-count">{{ readyOrdersCount }}</span>
+              <span class="filter-icon"></span>
+              <span class="filter-text">Đã sẵn sàng</span>
+              
             </button>
           </div>
         </div>
@@ -563,7 +563,6 @@ onMounted(() => {
   opacity: 0;
   transform: translateY(30px);
 }
-
 .order-card-leave-to {
   opacity: 0;
   transform: translateX(100px);

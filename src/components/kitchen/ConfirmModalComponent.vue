@@ -11,7 +11,7 @@
           <div class="modal-order-info">
             <div class="modal-table-info">
               <Coffee class="table-icon" />
-              <h4>Table {{ order?.tableNumber }}</h4>
+              <h4>Bàn: {{ order?.tableNumber }}</h4>
             </div>
             <div class="modal-time-info">
               <Clock class="time-icon" />
@@ -20,7 +20,7 @@
           </div>
           
           <div class="modal-items">
-            <h4>Order Items:</h4>
+            <h4>Danh sách món:</h4>
             <div v-for="item in order?.items" :key="item.id" class="modal-item">
               <div class="item-details">
                 <span class="item-quantity">{{ item.quantity }}x</span>
@@ -42,10 +42,10 @@
         </div>
         <div class="modal-actions">
           <button class="modal-btn cancel-btn" @click="$emit('close')">
-            Cancel
+            Huỷ
           </button>
           <button class="modal-btn confirm-btn" @click="$emit('confirm')">
-            Confirm
+            Xác nhận
           </button>
         </div>
       </div>

@@ -4,7 +4,7 @@
       <nav>
         <button class="nav-item" :class="{ active: activeTab === 'orders' }" @click="setActiveTab('orders')">
           <ClipboardList />
-          <span>Orders</span>
+          <span>Đơn hàng</span>
         </button>
         <button class="nav-item" :class="{ active: activeTab === 'menu' }" @click="setActiveTab('menu')">
           <BookOpen />
@@ -12,11 +12,11 @@
         </button>
         <button class="nav-item" :class="{ active: activeTab === 'history' }" @click="setActiveTab('history')">
           <History />
-          <span>History</span>
+          <span>Lịch sử</span>
         </button>
         <button class="nav-item" :class="{ active: activeTab === 'settings' }" @click="setActiveTab('settings')">
           <Settings />
-          <span>Settings</span>
+          <span>Cài đặt</span>
         </button>
       </nav>
     </aside>

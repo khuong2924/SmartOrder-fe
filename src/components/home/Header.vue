@@ -24,7 +24,7 @@
           <div class="flex flex-col">
             <span class="text-3xl font-bold tracking-wider" 
                   :class="{'text-white': !overWhiteSection, 'text-[#018ABE]': overWhiteSection}">
-              Smart Order
+              Nhà hàng Ngon
             </span>
           </div>
         </a>
